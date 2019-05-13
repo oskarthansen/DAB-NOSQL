@@ -37,8 +37,21 @@ namespace ToerreTumblr.Controllers
 
         public async Task<IActionResult> ShowWall(string id)
         {
-            List<Post> wallPosts = _repo.GetWall(id);
+            List<Post> wallPosts = _repo.GetWall(id,HttpContext.Session.GetString("UserId"));
             return View(wallPosts);
+        }
+
+        public IActionResult AddComment(string id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddComment(int id, [Bind("Text")] Comment comment)
+        {
+            _repo.AddComment(comment);
+            return RedirectToAction("ShowFeed");
         }
     }
 }
