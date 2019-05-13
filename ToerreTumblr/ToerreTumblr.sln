@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToereTumblr", "ToereTumblr\ToereTumblr.csproj", "{A4F7E2C3-9208-4D1A-990B-77EB26922C3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToerreTumblr", "ToerreTumblr\ToerreTumblr.csproj", "{5D2FA7D8-A6E6-404D-8340-DC70D3330AB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A4F7E2C3-9208-4D1A-990B-77EB26922C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4F7E2C3-9208-4D1A-990B-77EB26922C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4F7E2C3-9208-4D1A-990B-77EB26922C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4F7E2C3-9208-4D1A-990B-77EB26922C3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D2FA7D8-A6E6-404D-8340-DC70D3330AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D2FA7D8-A6E6-404D-8340-DC70D3330AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D2FA7D8-A6E6-404D-8340-DC70D3330AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D2FA7D8-A6E6-404D-8340-DC70D3330AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {314ED090-1CA2-49A3-9437-814D5813414D}
+		SolutionGuid = {9793FC6A-7E94-4011-8A9E-620E3527F642}
 	EndGlobalSection
 EndGlobal

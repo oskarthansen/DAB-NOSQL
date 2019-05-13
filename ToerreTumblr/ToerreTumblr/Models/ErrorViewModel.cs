@@ -1,6 +1,6 @@
 using System;
 
-namespace ToereTumblr.Models
+namespace ToerreTumblr.Models
 {
     public class ErrorViewModel
     {
