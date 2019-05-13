@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ToerreTumblr.DAL;
 using ToerreTumblr.Models;
+using ToerreTumblr.ViewModels;
 
 namespace ToerreTumblr.Controllers
 {
@@ -37,8 +38,20 @@ namespace ToerreTumblr.Controllers
 
         public async Task<IActionResult> ShowWall(string id)
         {
-            List<Post> wallPosts = _repo.GetWall(id);
-            return View(wallPosts);
+            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("UserId"));
+
+            if (wallPosts!=null)
+            {
+                var viewModel = new ShowWallViewModel()
+                {
+                    Posts = wallPosts,
+                    User = _repo.Get(id)
+                };
+
+                return View(viewModel);
+            }
+
+            return NotFound();
         }
     }
 }
