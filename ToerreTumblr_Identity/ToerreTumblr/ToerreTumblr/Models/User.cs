@@ -17,6 +17,14 @@ namespace ToerreTumblr.Models
         [BsonElement("Name")]
         public string Name{ get; set; }
 
+        [BsonElement("Login")]
+        [BsonRequired]
+        public string Login { get; set; }
+
+        [BsonElement("Password")]
+        [BsonRequired]
+        public string Password { get; set; }
+
         [BsonElement("Following")]
         public string[] Following { get; set; }
 
@@ -25,5 +33,7 @@ namespace ToerreTumblr.Models
 
         [BsonElement("Post")]
         public Post[] Posts { get; set; }
+
+        
     }
 }
