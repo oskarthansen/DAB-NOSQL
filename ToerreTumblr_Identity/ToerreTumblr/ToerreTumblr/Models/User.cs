@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ToerreTumblr.Models
 {
-    public class User : IdentityUser
+    public class User
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
