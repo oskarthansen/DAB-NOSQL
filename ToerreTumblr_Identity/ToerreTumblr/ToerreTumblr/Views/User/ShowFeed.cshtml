@@ -16,12 +16,16 @@
             <p>Created: @Model[i].CreationTime.ToString("f")</p>
             <a asp-action="AddComment" asp-route-id="@Model[i].Id">Add a comment</a>
             <div class="post-comments">
-                @for (int j = 0; i < Model[i].Comments.Length; ++j)
+                @if (Model[i].Comments != null)
                 {
-                    <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].Id">@Model[i].Comments[j].Author:</a>
-                    <p>@Model[i].Comments[j].Text</p>
-                    <hr />
+                    for (int j = 0; i < Model[i].Comments.Length; ++j)
+                    {
+                        <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].Id">@Model[i].Comments[j].Author:</a>
+                        <p>@Model[i].Comments[j].Text</p>
+                        <hr />
+                    }
                 }
+                
             </div>
         </div>
         <hr />

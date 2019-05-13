@@ -133,19 +133,24 @@ namespace ToerreTumblr.DAL
         public Comment AddPublicComment(string postId, Comment comment, string userId)
         {
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
-            Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
-            if (post == null)
+            if (user.Posts != null)
             {
-                return null;
+                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+                if (post == null)
+                {
+                    return null;
+                }
+                post.Comments.Append(comment);
+                Update(userId, user);
             }
-            post.Comments.Append(comment);
-
             return comment;
         }
 
         public Post AddPost(string userId, Post post)
         {
+            post.CreationTime = DateTime.Now;
             var usr = GetUser(userId);
+            post.AuthorName = usr.Name;
             if (usr.Posts == null)
             {
                 usr.Posts = new Post[]
@@ -155,9 +160,13 @@ namespace ToerreTumblr.DAL
             }
             else
             {
-                usr.Posts.Append(post);
+                Post[] posts = usr.Posts;
+                Post[] newPosts = new Post[posts.Length + 1]; //Added one to length
+                Array.Copy(posts,newPosts,posts.Length);
+                newPosts[posts.Length] = post;
+                usr.Posts = newPosts;
             }
-            
+            Update(userId,usr);
             return post;
 
             // Hvis ikke det virker så kald update () 
