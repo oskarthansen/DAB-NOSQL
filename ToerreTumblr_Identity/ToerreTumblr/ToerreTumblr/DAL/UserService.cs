@@ -121,6 +121,14 @@ namespace ToerreTumblr.DAL
         {
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
+
+        public void BlockUser(string UserToBlock, string UserId)
+        {
+            var user = GetUser(UserId);
+
+            user.Blocked.Append(UserToBlock);
+
+        }
         
     }
 }
