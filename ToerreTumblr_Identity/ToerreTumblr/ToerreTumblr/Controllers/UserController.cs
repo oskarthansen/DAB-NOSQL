@@ -45,7 +45,7 @@ namespace ToerreTumblr.Controllers
                 var viewModel = new ShowWallViewModel()
                 {
                     Posts = wallPosts,
-                    User = _repo.Get(id)
+                    User = _repo.GetUser(id)
                 };
 
                 return View(viewModel);
