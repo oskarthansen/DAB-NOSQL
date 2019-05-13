@@ -56,6 +56,7 @@ namespace ToerreTumblr
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
