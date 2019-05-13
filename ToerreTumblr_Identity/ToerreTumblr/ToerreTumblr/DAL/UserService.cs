@@ -54,6 +54,11 @@ namespace ToerreTumblr.DAL
 
         public List<Post> GetWall(string userId)
         {
+            // Skal hente alle en users posts
+            // Seneste posts, hvis ikke bruger er blokeret 
+            // Hvis brugere er i samme cirkel kan posts også se tiknyttede posts
+
+
 
         }
 
