@@ -8,8 +8,24 @@ namespace ToerreTumblr.Controllers
 {
     public class UserController : Controller
     {
+        public async Task<IActionResult> ShowFeed()
+        {
+            return View();
+        }
 
-        public IActionResult Index()
+        public IActionResult AddPost()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPost()
+        {
+            return RedirectToAction("ShowFeed");
+        }
+
+        public async Task<IActionResult> ShowWall(int id)
         {
             return View();
         }
