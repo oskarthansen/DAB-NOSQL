@@ -12,8 +12,7 @@ namespace ToerreTumblr.DAL
     {
         private readonly IMongoCollection<User> _users;
         private CircleService _service;
-
-
+        
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
@@ -122,10 +121,6 @@ namespace ToerreTumblr.DAL
         {
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
-
-        public void Remove(string id)
-        {
-            _users.DeleteOne(User=> user.Id == id);
-        }
+        
     }
 }
