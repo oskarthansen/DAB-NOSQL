@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using ToerreTumblr.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ToerreTumblr.Models;
 
 namespace ToerreTumblr
 {
@@ -38,7 +39,7 @@ namespace ToerreTumblr
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<User>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
