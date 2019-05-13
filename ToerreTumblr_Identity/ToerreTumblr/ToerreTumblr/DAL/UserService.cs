@@ -166,6 +166,10 @@ namespace ToerreTumblr.DAL
             user.Blocked.Append(UserToBlock);
 
         }
-        
+
+        public Circle GetCircle(string id)
+        {
+            return _service.GetCircle(id);
+        }
     }
 }

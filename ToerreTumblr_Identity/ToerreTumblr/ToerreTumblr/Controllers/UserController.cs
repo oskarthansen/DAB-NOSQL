@@ -51,7 +51,7 @@ namespace ToerreTumblr.Controllers
             post.AuthorName = _repo.GetUser(post.Author).Name;
             _repo.AddPost(post.Author, post,circleId);
 
-            return RedirectToAction("ShowFeed");
+            return RedirectToAction("ShowCircle",new {id = circleId});
         }
 
         public async Task<IActionResult> ShowWall(string id)
@@ -89,12 +89,13 @@ namespace ToerreTumblr.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddComment(string postId, string circleId, [Bind("Text")] Comment comment)
         {
             _repo.AddComment(postId, comment, circleId);
-            return RedirectToAction("ShowFeed");
+            return RedirectToAction("ShowCircle",new{id = circleId});
         }
 
         public IActionResult BlockUser(string id)
@@ -116,5 +117,13 @@ namespace ToerreTumblr.Controllers
 
             return BadRequest();
         }
+
+        public IActionResult ShowCircle(string id)
+        {
+            Circle circle = _repo.GetCircle(id);
+            return View(circle);
+        }
+        
+
     }
 }
