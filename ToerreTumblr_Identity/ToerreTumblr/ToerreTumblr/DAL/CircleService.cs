@@ -21,7 +21,7 @@ namespace ToerreTumblr.DAL
 
         public List<Circle> GetCirclesForUser(string userId)
         {
-           return _circles.Find(circle => circle.UserIds.Contains(userId)).ToList();
+            return _circles.Find(circle => circle.UserIds.Contains(userId)).ToList();
         }
 
         public Circle GetCircle(string id)
@@ -34,7 +34,7 @@ namespace ToerreTumblr.DAL
             _circles.InsertOne(circle);
             return circle;
         }
-        
+
         public void Update(string id, Circle circleIn)
         {
             _circles.ReplaceOne(circle => circle.Id == id, circleIn);
@@ -48,6 +48,31 @@ namespace ToerreTumblr.DAL
         public void Remove(string id)
         {
             _circles.DeleteOne(circle => circle.Id == id);
+        }
+
+        public List<Post> GetPostsForCircle(string id)
+        {
+            var circle = _circles.Find(c => c.Id == id).FirstOrDefault();
+            if (circle != null)
+            {
+                return circle.Posts.ToList();
+            }
+            return null;
+        }
+
+        public void AddUser(string circleId, string userId)
+        {
+            var circle = _circles.Find(c => c.Id == circleId).FirstOrDefault();
+            circle.UserIds.Append(userId);
+            Update(circleId, circle);
+        }
+
+        public void RemoveUser(string circleId, string userId)
+        {
+            var circle = _circles.Find(c => c.Id == circleId).FirstOrDefault();
+            List<string> userIds = circle.UserIds.ToList();
+            userIds.Remove(userId);
+            circle.UserIds = userIds.ToArray();
         }
     }
 }

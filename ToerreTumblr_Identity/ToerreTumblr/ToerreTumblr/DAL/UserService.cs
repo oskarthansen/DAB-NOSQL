@@ -12,8 +12,7 @@ namespace ToerreTumblr.DAL
     {
         private readonly IMongoCollection<User> _users;
         private CircleService _service;
-
-
+        
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));

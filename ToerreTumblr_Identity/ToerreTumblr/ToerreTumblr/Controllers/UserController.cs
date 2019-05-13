@@ -34,8 +34,9 @@ namespace ToerreTumblr.Controllers
             return RedirectToAction("ShowFeed");
         }
 
-        public async Task<IActionResult> ShowWall(int id)
+        public async Task<IActionResult> ShowWall(string id)
         {
+            List<Post> wallPosts = new List<Post>();
             return View();
         }
     }
