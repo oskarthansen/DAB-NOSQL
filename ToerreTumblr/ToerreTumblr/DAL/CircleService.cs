@@ -10,13 +10,44 @@ namespace ToerreTumblr.DAL
 {
     public class CircleService
     {
-        private readonly IMongoCollection<Circle> _books;
+        private readonly IMongoCollection<Circle> _circles;
 
         public CircleService(IConfiguration config)
         {
-            var client = new MongoClient(config.GetConnectionString("BookstoreDb"));
-            var database = client.GetDatabase("BookstoreDb");
-            _books = database.GetCollection<Circle>("Books");
+            var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
+            var database = client.GetDatabase("SocialNetwork");
+            _circles = database.GetCollection<Circle>("Circles");
+        }
+
+        public List<Circle> GetCirclesForUser(string userId)
+        {
+           return _circles.Find(circle => circle.UserIds.Contains(userId)).ToList();
+        }
+
+        public Circle GetCircle(string id)
+        {
+            return _circles.Find<Circle>(circle => circle.Id == id).FirstOrDefault();
+        }
+
+        public Circle Create(Circle circle)
+        {
+            _circles.InsertOne(circle);
+            return circle;
+        }
+        
+        public void Update(string id, Circle circleIn)
+        {
+            _circles.ReplaceOne(circle => circle.Id == id, circleIn);
+        }
+
+        public void Remove(Circle circleIn)
+        {
+            _circles.DeleteOne(circle => circle.Id == circleIn.Id);
+        }
+
+        public void Remove(string id)
+        {
+            _circles.DeleteOne(circle => circle.Id == id);
         }
     }
 }
