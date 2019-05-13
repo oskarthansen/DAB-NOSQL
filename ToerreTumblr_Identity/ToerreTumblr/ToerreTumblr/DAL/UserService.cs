@@ -78,7 +78,7 @@ namespace ToerreTumblr.DAL
 
         public List<User> GetBlocked(string userId)
         {
-            var usr = Get(userId);
+            var usr = GetUser(userId);
             return _users.Find(user => usr.Blocked.Contains(user.Id)).ToList();
         }
 
@@ -111,7 +111,7 @@ namespace ToerreTumblr.DAL
 
         public Post AddPost(string userId, Post post)
         {
-            var usr = Get(userId);
+            var usr = GetUser(userId);
             List <Post> userPosts = usr.Posts.ToList();
             userPosts.Add(post);
             usr.Posts = userPosts.ToArray();

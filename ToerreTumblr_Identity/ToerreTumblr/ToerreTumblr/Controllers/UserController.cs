@@ -24,16 +24,33 @@ namespace ToerreTumblr.Controllers
             return View(feed);
         }
 
-        public IActionResult AddPost(int id)
+        public IActionResult AddPublicPost()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPost(int id, [Bind("Text")]Post post)
+        public IActionResult AddPublicPost([Bind("Text")]Post post)
         {
-            _repo.AddPost(post);
+            _repo.AddPost(HttpContext.Session.GetString("UserId"),post);
+            return RedirectToAction("ShowFeed");
+        }
+
+        public IActionResult AddPost(string circleId)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddPost(string circleId, [Bind("Text")] Post post)
+        {
+            post.CreationTime = DateTime.Now;
+            post.Author = HttpContext.Session.GetString("UserId");
+            post.AuthorName = _repo.GetUser(post.Author).Name;
+            _repo.AddPost(post.Author, post,circleId);
+
             return RedirectToAction("ShowFeed");
         }
 
@@ -55,17 +72,30 @@ namespace ToerreTumblr.Controllers
             return NotFound();
         }
 
-        public IActionResult AddComment(string id)
+        public IActionResult AddPublicComment(string id)
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddComment(int id, [Bind("Text")] Comment comment)
+        public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
         {
-            _repo.AddComment(comment);
+            _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("UserId"));
             return RedirectToAction("ShowFeed");
         }
+
+        public IActionResult AddComment(string postId, string circleId)
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddComment(string postId, string circleId, [Bind("Text")] Comment comment)
+        {
+            _repo.AddComment(postId, comment, circleId);
+            return RedirectToAction("ShowFeed");
+        }
+
     }
 }
