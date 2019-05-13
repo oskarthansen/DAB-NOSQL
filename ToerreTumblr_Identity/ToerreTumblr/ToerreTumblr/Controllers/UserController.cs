@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ToerreTumblr.DAL;
 using ToerreTumblr.Models;
+using ToerreTumblr.ViewModels;
 
 namespace ToerreTumblr.Controllers
 {
@@ -18,8 +20,8 @@ namespace ToerreTumblr.Controllers
         }
         public async Task<IActionResult> ShowFeed()
         {
-            List<Post> feed = _repo.GetFeed();
-            return View();
+            List<Post> feed = _repo.GetFeed(HttpContext.Session.GetString("UserId"));
+            return View(feed);
         }
 
         public IActionResult AddPost()
@@ -36,8 +38,33 @@ namespace ToerreTumblr.Controllers
 
         public async Task<IActionResult> ShowWall(string id)
         {
-            List<Post> wallPosts = new List<Post>();
+            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("UserId"));
+
+            if (wallPosts!=null)
+            {
+                var viewModel = new ShowWallViewModel()
+                {
+                    Posts = wallPosts,
+                    User = _repo.GetUser(id)
+                };
+
+                return View(viewModel);
+            }
+
+            return NotFound();
+        }
+
+        public IActionResult AddComment(string id)
+        {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddComment(int id, [Bind("Text")] Comment comment)
+        {
+            _repo.AddComment(comment);
+            return RedirectToAction("ShowFeed");
         }
     }
 }

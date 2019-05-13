@@ -1,8 +1,28 @@
-﻿@model object
+﻿@using Microsoft.AspNetCore.Mvc.Internal
+@model ToerreTumblr.ViewModels.ShowWallViewModel
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>Wall</h2>
+<h2>@Model.User.Name's Wall</h2>
+
+@for (int i = 0; i < Model.Posts.Count; ++i)
+{
+    <div class="feed-post">
+        <p>@Model.Posts[i].Text</p>
+        <img src="~/Images/@Model.Posts[i].Image" />
+        <p>By: @Model.Posts[i].Author</p>
+        <p>Created: @Model.Posts[i].CreationTime.ToString("f")</p>
+        <div class="post-comments">
+            @for (int j = 0; i < Model.Posts[i].Comments.Length; ++j)
+            {
+                <a asp-action="ShowWall" asp-route-id="@Model.Posts[i].Comments[j].Id">@Model.Posts[i].Comments[j].Author:</a>
+                <p>@Model.Posts[i].Comments[j].Text</p>
+                <hr />
+            }
+        </div>
+    </div>
+    <hr />
+}
