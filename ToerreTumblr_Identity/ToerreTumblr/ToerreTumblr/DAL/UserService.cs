@@ -26,7 +26,28 @@ namespace ToerreTumblr.DAL
         {
             var usr = GetUser(userId);
 
-            return _users.Find(user => usr.Following.Contains(user.Id) & !user.Blocked.Contains(userId)).ToList();
+            if (usr.Following==null)
+            {
+                return new List<User>();
+            }
+
+            List<User> followingUsers = new List<User>();
+            followingUsers = _users.Find(user => usr.Following.Contains(user.Id)).ToList();
+            List<User> UsersToRemove = new List<User>();
+            foreach (var user in followingUsers)
+            {
+                if (user.Blocked != null)
+                {
+                    if (user.Blocked.Contains(usr.Id))
+                        UsersToRemove.Remove(user);
+                }
+            }
+            foreach (var user in UsersToRemove)
+            {
+                followingUsers.Remove(user);
+            }
+
+            return followingUsers;
         }
 
         public List<Post> GetFeed(string userId)
@@ -37,17 +58,30 @@ namespace ToerreTumblr.DAL
             List<Post> posts = new List<Post>();
             foreach (var user in following)
             {
-                posts.AddRange(user.Posts.ToList());
+                if (user.Posts != null)
+                {
+                    posts.AddRange(user.Posts.ToList());
+                }
+                
             }
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
 
             foreach (var circle in circles)
             {
-                posts.AddRange(circle.Posts.ToList());
+                if (circle.Posts != null)
+                {
+                    posts.AddRange(circle.Posts.ToList());
+                }
+                
             }
 
-            posts.AddRange(GetUser(userId).Posts.ToList());
+            User currentUser = GetUser(userId);
+            if (currentUser.Posts != null)
+            {
+                posts.AddRange(currentUser.Posts);
+            }
+            
 
             return posts;
         }
@@ -112,9 +146,17 @@ namespace ToerreTumblr.DAL
         public Post AddPost(string userId, Post post)
         {
             var usr = GetUser(userId);
-            List <Post> userPosts = usr.Posts.ToList();
-            userPosts.Add(post);
-            usr.Posts = userPosts.ToArray();
+            if (usr.Posts == null)
+            {
+                usr.Posts = new Post[]
+                {
+                    post
+                };
+            }
+            else
+            {
+                usr.Posts.Append(post);
+            }
             
             return post;
 
@@ -157,6 +199,7 @@ namespace ToerreTumblr.DAL
 
         public User Create(User user)
         {
+            user.Posts=new Post[0];
             _users.InsertOne(user);
             return user;
         }

@@ -20,7 +20,7 @@ namespace ToerreTumblr.Controllers
         }
         public async Task<IActionResult> ShowFeed()
         {
-            List<Post> feed = _repo.GetFeed(HttpContext.Session.GetString("UserId"));
+            List<Post> feed = _repo.GetFeed(HttpContext.Session.GetString("_CurrentUserId"));
             return View(feed);
         }
 
@@ -33,7 +33,7 @@ namespace ToerreTumblr.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddPublicPost([Bind("Text")]Post post)
         {
-            _repo.AddPost(HttpContext.Session.GetString("UserId"),post);
+            _repo.AddPost(HttpContext.Session.GetString("_CurrentUserId"),post);
             return RedirectToAction("ShowFeed");
         }
 
@@ -47,7 +47,7 @@ namespace ToerreTumblr.Controllers
         public IActionResult AddPost(string circleId, [Bind("Text")] Post post)
         {
             post.CreationTime = DateTime.Now;
-            post.Author = HttpContext.Session.GetString("UserId");
+            post.Author = HttpContext.Session.GetString("_CurrentUserId");
             post.AuthorName = _repo.GetUser(post.Author).Name;
             _repo.AddPost(post.Author, post,circleId);
 
@@ -56,7 +56,7 @@ namespace ToerreTumblr.Controllers
 
         public async Task<IActionResult> ShowWall(string id)
         {
-            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("UserId"));
+            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("_CurrentUserId"));
 
             if (wallPosts!=null)
             {
@@ -81,7 +81,7 @@ namespace ToerreTumblr.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
         {
-            _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("UserId"));
+            _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("_CurrentUserId"));
             return RedirectToAction("ShowFeed");
         }
 
@@ -111,7 +111,7 @@ namespace ToerreTumblr.Controllers
         {
             if (user.Id==id)
             {
-                _repo.BlockUser(id, HttpContext.Session.GetString("UserId"));
+                _repo.BlockUser(id, HttpContext.Session.GetString("_CurrentUserId"));
                 return RedirectToAction("ShowFeed");
             }
 
