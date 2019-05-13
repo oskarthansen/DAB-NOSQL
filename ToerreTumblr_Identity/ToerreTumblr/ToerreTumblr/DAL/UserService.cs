@@ -69,7 +69,7 @@ namespace ToerreTumblr.DAL
             foreach (var circle in circles)
             {
                 if(circle.UserIds.Contains(guestId))
-                    WallPosts.AddRange(circle.Posts);
+                    WallPosts.AddRange(circle.Posts.Where(x=>x.Author==userId).ToList());
             }
             
             return WallPosts;
