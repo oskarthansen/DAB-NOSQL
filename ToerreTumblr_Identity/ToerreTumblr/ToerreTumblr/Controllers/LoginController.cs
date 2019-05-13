@@ -19,25 +19,23 @@ namespace ToerreTumblr.Controllers
             _userService = userService;
         }
         
-        public IActionResult Login()
+        public IActionResult Login(string id)
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string login,User user)
+        public async Task<IActionResult> Login(string id,User user)
         {
-            if (_userService.Login(user))
-            {
-                //sets currentUserId - so other controllers kan use the current user.
-                HttpContext.Session.SetString("CurrentUserId", user.Id);
 
-                return RedirectToAction("ShowFeed", "User");
-            }
+            if (!_userService.Login(user)) return View();
+            //sets currentUserId - so other controllers kan use the current user.
 
-            return Unauthorized();
-            
+            HttpContext.Session.SetString("CurrentUserId", user.Id);
+
+            return RedirectToAction("ShowFeed", "User");
+
         }
 
         public IActionResult Register()
