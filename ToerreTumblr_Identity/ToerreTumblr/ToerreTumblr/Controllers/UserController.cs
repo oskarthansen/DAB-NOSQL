@@ -30,7 +30,7 @@ namespace ToerreTumblr.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPost()
+        public async Task<IActionResult> AddPost(int dummy)
         {
             return RedirectToAction("ShowFeed");
         }

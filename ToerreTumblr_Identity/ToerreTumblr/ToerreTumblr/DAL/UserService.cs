@@ -52,15 +52,36 @@ namespace ToerreTumblr.DAL
             return posts;
         }
 
-        public List<Post> GetWall(string userId)
+        public List<Post> GetWall(string userId, string guestId)
         {
             // Skal hente alle en users posts
             // Seneste posts, hvis ikke bruger er blokeret 
             // Hvis brugere er i samme cirkel kan posts også se tiknyttede posts
+            var user = Get(userId);
+            if (user.Blocked.Contains(guestId))
+                return null;
 
+            List<Post> WallPosts = new List<Post>();
+            WallPosts.AddRange(user.Posts);
 
+            List<Circle> circles = _service.GetCirclesForUser(userId);
+
+            foreach (var circle in circles)
+            {
+                if(circle.UserIds.Contains(guestId))
+                    WallPosts.AddRange(circle.Posts);
+            }
+            
+            return WallPosts;
 
         }
+
+
+        // User sæt password
+        // Opret user
+        // Check if user exists in database
+
+        
 
         public List<User> GetBlocked(string userId)
         {
@@ -74,11 +95,22 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }
 
-        public Post InsertPost(Post post)
+        public User UserExistInDb(string username)
         {
-            _users.InsertOne(post);
-            return post;
+            return null;
         }
+
+        public User Create(User user)
+        {
+            _users.InsertOne(user);
+            return user;
+        }
+
+        //public Post InsertPost(Post post)
+        //{
+        //    _users.InsertOne(post);
+        //    return post;
+        //}
 
         public void Update(string id, User userIn)
         {
@@ -89,10 +121,6 @@ namespace ToerreTumblr.DAL
         {
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
-
-        public void Remove(string id)
-        {
-            _users.DeleteOne(User=> user.Id == id);
-        }
+        
     }
 }
