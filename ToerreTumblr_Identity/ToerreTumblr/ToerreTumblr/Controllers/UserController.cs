@@ -53,5 +53,18 @@ namespace ToerreTumblr.Controllers
 
             return NotFound();
         }
+
+        public IActionResult AddComment(string id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddComment(int id, [Bind("Text")] Comment comment)
+        {
+            _repo.AddComment(comment);
+            return RedirectToAction("ShowFeed");
+        }
     }
 }
