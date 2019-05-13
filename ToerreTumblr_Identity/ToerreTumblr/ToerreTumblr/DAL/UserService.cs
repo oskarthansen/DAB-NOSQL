@@ -132,6 +132,11 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }
 
+        public User GetUser(string Login, string password)
+        {
+            return _users.Find<User>(u => u.Login == Login && u.Password == password).FirstOrDefault();
+        }
+
         public User UserExistInDb(string username)
         {
             return null;
@@ -146,7 +151,8 @@ namespace ToerreTumblr.DAL
             {
                 return false;
             }
-            else return true;
+
+            return true;
         }
 
         public User Create(User user)

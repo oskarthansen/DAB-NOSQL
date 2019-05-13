@@ -14,25 +14,30 @@ namespace ToerreTumblr.Controllers
     {
         private readonly UserService _userService;
 
+
+        public const string SessionKeyName = "_CurrentUserId";
+
         public LoginController(UserService userService)
         {
             _userService = userService;
         }
         
-        public IActionResult Login(string id)
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string id,User user)
+        public async Task<IActionResult> Login(User user)
         {
 
             if (!_userService.Login(user)) return View();
             //sets currentUserId - so other controllers kan use the current user.
 
-            HttpContext.Session.SetString("CurrentUserId", user.Id);
+            User dummy = _userService.GetUser(user.Login, user.Password);
+
+            HttpContext.Session.SetString(SessionKeyName, dummy.Id);
 
             return RedirectToAction("ShowFeed", "User");
 

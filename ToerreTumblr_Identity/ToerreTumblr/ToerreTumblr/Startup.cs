@@ -34,6 +34,7 @@ namespace ToerreTumblr
 
             services.AddScoped<UserService>();
             services.AddSession();
+            services.AddDistributedMemoryCache();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -54,7 +55,7 @@ namespace ToerreTumblr
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
