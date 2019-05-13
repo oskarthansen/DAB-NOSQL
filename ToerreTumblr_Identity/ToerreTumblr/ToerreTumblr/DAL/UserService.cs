@@ -89,10 +89,6 @@ namespace ToerreTumblr.DAL
         {
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
-
-        public void Remove(string id)
-        {
-            _users.DeleteOne(User=> user.Id == id);
-        }
+        
     }
 }
