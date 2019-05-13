@@ -97,5 +97,24 @@ namespace ToerreTumblr.Controllers
             return RedirectToAction("ShowFeed");
         }
 
+        public IActionResult BlockUser(string id)
+        {
+            var user = _repo.GetUser(id);
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult BlockUser(string id, [Bind("Id")] User user)
+        {
+            if (user.Id==id)
+            {
+                _repo.BlockUser(id, HttpContext.Session.GetString("UserId"));
+                return RedirectToAction("ShowFeed");
+            }
+
+            return BadRequest();
+        }
     }
 }
