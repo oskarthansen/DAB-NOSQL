@@ -11,14 +11,14 @@ namespace ToerreTumblr.Controllers
 {
     public class UserController : Controller
     {
-        private UserService _repo
+        private UserService _repo;
         public UserController(IConfiguration config)
         {
             _repo = new UserService(config);
         }
         public async Task<IActionResult> ShowFeed()
         {
-            List<Post> feed = _repo.GetFeed()
+            List<Post> feed = _repo.GetFeed();
             return View();
         }
 
