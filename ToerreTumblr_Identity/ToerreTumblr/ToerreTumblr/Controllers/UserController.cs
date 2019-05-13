@@ -24,15 +24,16 @@ namespace ToerreTumblr.Controllers
             return View(feed);
         }
 
-        public IActionResult AddPost()
+        public IActionResult AddPost(int id)
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPost(int dummy)
+        public IActionResult AddPost(int id, [Bind("Text")]Post post)
         {
+            _repo.AddPost(post);
             return RedirectToAction("ShowFeed");
         }
 
@@ -45,7 +46,7 @@ namespace ToerreTumblr.Controllers
                 var viewModel = new ShowWallViewModel()
                 {
                     Posts = wallPosts,
-                    User = _repo.Get(id)
+                    User = _repo.GetUser(id)
                 };
 
                 return View(viewModel);
