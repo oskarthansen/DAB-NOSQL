@@ -18,7 +18,7 @@ namespace ToerreTumblr.Controllers
         }
         public async Task<IActionResult> ShowFeed()
         {
-            List<Post> feed = _repo.GetFeed();
+            //List<Post> feed = _repo.GetFeed();
             return View();
         }
 

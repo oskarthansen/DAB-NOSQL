@@ -100,6 +100,18 @@ namespace ToerreTumblr.DAL
             return null;
         }
 
+        public bool Login(User user)
+        {
+            
+            string id = _users.Find(u => u.Login == user.Login && u.Password==user.Password).FirstOrDefault().Id;
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return false;
+            }
+            else return true;
+        }
+
         public User Create(User user)
         {
             _users.InsertOne(user);
