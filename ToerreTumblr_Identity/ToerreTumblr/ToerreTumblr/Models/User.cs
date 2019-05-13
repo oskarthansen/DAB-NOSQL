@@ -34,6 +34,8 @@ namespace ToerreTumblr.Models
         [BsonElement("Post")]
         public Post[] Posts { get; set; }
 
-        
+        [BsonElement("Followers")]
+        public List<User> Followers { get; set; }
+
     }
 }
