@@ -18,5 +18,8 @@ namespace ToerreTumblr.Models
 
         [BsonElement("Posts")]
         public Post[] Posts { get; set; }
+
+        [BsonElement("Name")]
+        public string Name { get; set; }
     }
 }

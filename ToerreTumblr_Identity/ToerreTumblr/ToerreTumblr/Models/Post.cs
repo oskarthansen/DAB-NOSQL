@@ -22,6 +22,9 @@ namespace ToerreTumblr.Models
         [BsonElement("Author")]
         public string Author { get; set; }
 
+        [BsonElement("AuthorName")]
+        public string AuthorName { get; set; }  
+
         [BsonElement("CreationTime")]
         public DateTime CreationTime { get; set; }
 
