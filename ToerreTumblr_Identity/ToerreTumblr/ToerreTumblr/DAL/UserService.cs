@@ -69,26 +69,63 @@ namespace ToerreTumblr.DAL
             foreach (var circle in circles)
             {
                 if(circle.UserIds.Contains(guestId))
-                    WallPosts.AddRange(circle.Posts);
+                    WallPosts.AddRange(circle.Posts.Where(x=>x.Author==userId).ToList());
             }
             
             return WallPosts;
 
         }
 
-
-        // User sæt password
-        // Opret user
-        // Check if user exists in database
-
-        
-
         public List<User> GetBlocked(string userId)
         {
-            var usr = GetUser(userId);
+            var usr = Get(userId);
             return _users.Find(user => usr.Blocked.Contains(user.Id)).ToList();
         }
 
+        // Mangler funktion til addPost
+        // Add comment
+
+        public Comment AddComment(string postId, Comment comment, string circleId)
+        {
+            Circle circle = _service.GetCircle(circleId);
+            Post post = circle.Posts.FirstOrDefault(p => p.Id == postId);
+            if (post == null)
+                return null;
+            post.Comments.Append(comment);
+            _service.Update(circleId,circle);
+            return comment;
+        }
+
+        public Comment AddPublicComment(string postId, Comment comment, string userId)
+        {
+            User user = _users.Find(u => u.Id == userId).FirstOrDefault();
+            Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+            if (post == null)
+            {
+                return null;
+            }
+            post.Comments.Append(comment);
+
+            return comment;
+        }
+
+        public Post AddPost(string userId, Post post)
+        {
+            var usr = Get(userId);
+            List <Post> userPosts = usr.Posts.ToList();
+            userPosts.Add(post);
+            usr.Posts = userPosts.ToArray();
+            
+            return post;
+
+            // Hvis ikke det virker så kald update () 
+        }
+
+        public Post AddPost(string userId, Post post, string circleId)
+        {
+
+            return post;
+        }
 
         public User GetUser(string id)
         {
