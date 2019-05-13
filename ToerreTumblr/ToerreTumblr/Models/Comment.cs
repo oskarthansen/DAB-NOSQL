@@ -7,19 +7,18 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ToerreTumblr.Models
 {
-    public class User : IdentityUser
+    public class Comment
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        
+        [BsonElement("Author")]
+        public string Author{ get; set; }
 
-        [BsonElement("Following")]
-        public string[] Following { get; set; }
+        [BsonElement("Text")]
+        public string Text { get; set; }
 
-        [BsonElement("Block")]
-        public string[] Block { get; set; }
 
-        [BsonElement("Posts")]
-        public Post[] Posts { get; set; }
     }
 }
