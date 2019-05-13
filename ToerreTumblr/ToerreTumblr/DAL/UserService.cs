@@ -28,28 +28,28 @@ namespace ToerreTumblr.DAL
             return _users.Find(user => usr.Following.Contains(user.Id)).ToList();
         }
 
-        public List<Post> GetFeed(string userId)
-        {
+        //public List<Post> GetFeed(string userId)
+        //{
             
-        }
+        //}
 
-        public getWall
+        //public getWall
 
-        public List<User> GetBlocked(string userId)
-        {
+        //public List<User> GetBlocked(string userId)
+        //{
 
-        }
+        //}
 
         public User Get(string id)
         {
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }
 
-        public Post InsertPost(Post post)
-        {
-            _users.InsertOne(post);
-            return post;
-        }
+        //public Post InsertPost(Post post)
+        //{
+        //    _users.InsertOne(post);
+        //    return post;
+        //}
 
         public void Update(string id, User userIn)
         {
@@ -61,9 +61,9 @@ namespace ToerreTumblr.DAL
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
 
-        public void Remove(string id)
-        {
-            _users.DeleteOne(User=> user.Id == id);
-        }
+        //public void Remove(string id)
+        //{
+        //    _users.DeleteOne(User=> user.Id == id);
+        //}
     }
 }
