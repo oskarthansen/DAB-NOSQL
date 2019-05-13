@@ -24,7 +24,7 @@ namespace ToerreTumblr.DAL
 
         public List<User> GetFollowing(string userId)
         {
-            var usr = Get(userId);
+            var usr = GetUser(userId);
 
             return _users.Find(user => usr.Following.Contains(user.Id) & !user.Blocked.Contains(userId)).ToList();
         }
@@ -47,7 +47,7 @@ namespace ToerreTumblr.DAL
                 posts.AddRange(circle.Posts.ToList());
             }
 
-            posts.AddRange(Get(userId).Posts.ToList());
+            posts.AddRange(GetUser(userId).Posts.ToList());
 
             return posts;
         }
@@ -57,7 +57,7 @@ namespace ToerreTumblr.DAL
             // Skal hente alle en users posts
             // Seneste posts, hvis ikke bruger er blokeret 
             // Hvis brugere er i samme cirkel kan posts også se tiknyttede posts
-            var user = Get(userId);
+            var user = GetUser(userId);
             if (user.Blocked.Contains(guestId))
                 return null;
 
@@ -85,12 +85,12 @@ namespace ToerreTumblr.DAL
 
         public List<User> GetBlocked(string userId)
         {
-            var usr = Get(userId);
+            var usr = GetUser(userId);
             return _users.Find(user => usr.Blocked.Contains(user.Id)).ToList();
         }
 
 
-        public User Get(string id)
+        public User GetUser(string id)
         {
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }

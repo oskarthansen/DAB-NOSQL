@@ -13,7 +13,7 @@
         <p>@Model[i].Text</p>
         <img src="~/Images/@Model[i].Image" />
         <p>By: @Model[i].Author</p>
-        <p>Created: @Model[i].CreationTime.ToString("g")</p>
+        <p>Created: @Model[i].CreationTime.ToString("f")</p>
         <a asp-action="AddComment" asp-route-id="@Model[i].Id" >Add a comment</a>
         <div class="post-comments">
             @for (int j = 0; i < Model[i].Comments.Length; ++j)
