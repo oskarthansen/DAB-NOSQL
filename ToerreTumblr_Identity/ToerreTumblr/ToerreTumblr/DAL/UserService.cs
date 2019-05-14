@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ToerreTumblr.Models;
 
@@ -22,6 +23,7 @@ namespace ToerreTumblr.DAL
         }
 
 
+        // Skal måske laves om til at hpndtere array i stedet
         public List<User> GetFollowing(string userId)
         {
             var usr = GetUser(userId);
@@ -121,8 +123,9 @@ namespace ToerreTumblr.DAL
 
         public Comment AddComment(string postId, Comment comment, string circleId)
         {
+            comment.Id = ObjectId.GenerateNewId(DateTime.Now);
             Circle circle = _service.GetCircle(circleId);
-            Post post = circle.Posts.FirstOrDefault(p => p.Id == postId);
+            Post post = circle.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
             if (post == null)
                 return null;
             post.Comments.Append(comment);
@@ -135,7 +138,7 @@ namespace ToerreTumblr.DAL
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
             if (user.Posts != null)
             {
-                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+                Post post = user.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
                 if (post == null)
                 {
                     return null;
@@ -148,6 +151,7 @@ namespace ToerreTumblr.DAL
 
         public Post AddPost(string userId, Post post)
         {
+            post.Id = ObjectId.GenerateNewId(DateTime.Now);
             post.CreationTime = DateTime.Now;
             post.SharedType = "Public";
             var usr = GetUser(userId);
@@ -163,11 +167,11 @@ namespace ToerreTumblr.DAL
             {
                 Post[] posts = usr.Posts;
                 Post[] newPosts = new Post[posts.Length + 1]; //Added one to length
-                Array.Copy(posts,newPosts,posts.Length);
+                Array.Copy(posts, newPosts, posts.Length);
                 newPosts[posts.Length] = post;
                 usr.Posts = newPosts;
             }
-            Update(userId,usr);
+            Update(userId, usr);
             return post;
 
             // Hvis ikke det virker så kald update () 

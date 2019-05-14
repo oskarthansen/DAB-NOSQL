@@ -30,12 +30,12 @@ namespace ToerreTumblr.Models
 
         [BsonElement("Blocked")]
         public string[] Blocked { get; set; }
-
+  
         [BsonElement("Post")]
         public Post[] Posts { get; set; }
 
         [BsonElement("Followers")]
-        public List<User> Followers { get; set; }
+        public User[] Followers { get; set; }
 
     }
 }
