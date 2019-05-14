@@ -150,7 +150,7 @@ namespace ToerreTumblr.DAL
         {
             post.CreationTime = DateTime.Now;
             var usr = GetUser(userId);
-            post.AuthorName = usr.Name;
+            post.AuthorName = usr.Login;
             if (usr.Posts == null)
             {
                 usr.Posts = new Post[]
