@@ -82,6 +82,12 @@ namespace ToerreTumblr.Controllers
             return View();
         }
 
+        public IActionResult GetUsers()
+        {
+            var users = _repo.GetUsers();
+            return View(users);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)

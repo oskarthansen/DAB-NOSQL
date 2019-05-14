@@ -170,7 +170,7 @@ namespace ToerreTumblr.DAL
                 source.Posts = allPosts;
                 Update(sourceId, source); ;
             }
-            
+            newComment.Id = ObjectId.GenerateNewId(DateTime.Now);
             return newComment;
         }
 
@@ -300,6 +300,11 @@ namespace ToerreTumblr.DAL
         public string GetUserId(string Login)
         {
             return _users.Find(u => u.Login == Login).FirstOrDefault().Id;
+        }
+
+        public List<User> GetUsers()
+        {
+            return _users.Find(user => true).ToList();
         }
 
 
