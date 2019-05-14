@@ -175,27 +175,18 @@ namespace ToerreTumblr.DAL
             return newComment;
         }
 
-        public Comment AddPublicComment(string postId, Comment comment, string userId)
-        {
-            User user = _users.Find(u => u.Id == userId).FirstOrDefault();
-            if (user.Posts != null)
-            {
-                Post post = user.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
-                if (post == null)
-                {
-                    return null;
-                }
-                post.Comments.Append(comment);
-                Update(userId, user);
-            }
-            return comment;
-        }
-
         public Post AddPost(string userId, Post post)
         {
             post.Id = ObjectId.GenerateNewId(DateTime.Now);
             post.CreationTime = DateTime.Now;
-            post.SharedType = "Public";
+            if (post.SharedType==null)
+            {
+                post.SharedType = "Public";
+            }
+            else
+            {
+                post.SharedType = GetCircle(post.SharedType).Name;
+            }
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
             post.Author = usr.Id;
