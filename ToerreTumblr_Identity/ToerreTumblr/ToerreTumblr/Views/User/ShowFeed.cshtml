@@ -22,6 +22,7 @@
         @if (Model[i].Author == ViewBag.CurrentUser)
         {
             <a asp-action="EditPost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Edit</a>
+            <a asp-action="DeletePost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Delete</a>
         }
         <a asp-action="AddComment" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-sharedType="@Model[i].SharedType">Add a comment</a>
         <div class="post-comments">

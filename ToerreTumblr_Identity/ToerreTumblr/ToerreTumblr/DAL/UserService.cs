@@ -112,9 +112,10 @@ namespace ToerreTumblr.DAL
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
 
+
             foreach (var circle in circles)
             {
-                if(circle.UserIds.Contains(guestId))
+                if(circle.UserIds.Contains(guestId)&&circle.Posts!=null)
                     WallPosts.AddRange(circle.Posts.Where(x=>x.Author==userId).ToList());
             }
 
@@ -162,7 +163,7 @@ namespace ToerreTumblr.DAL
                 var commentsList = postToComment.Comments.ToList();
                 newComment.Author = usr.Name;
                 newComment.AuthorId = usr.Id;
-                newComment.Id = ObjectId.GenerateNewId(DateTime.Now);
+                newComment.Id = ObjectId.GenerateNewId(DateTime.Now).ToString();
                 commentsList.Add(newComment);
                 postToComment.Comments = commentsList.ToArray();
             }
@@ -189,7 +190,7 @@ namespace ToerreTumblr.DAL
 
         public Post AddPost(string userId, Post post)
         {
-            post.Id = ObjectId.GenerateNewId(DateTime.Now);
+            post.Id = ObjectId.GenerateNewId(DateTime.Now).ToString();
             post.CreationTime = DateTime.Now;
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
@@ -314,7 +315,7 @@ namespace ToerreTumblr.DAL
         {
             var postList = type=="Public" ? GetUser(sourceId).Posts.ToList() : GetCircle(sourceId).Posts.ToList();
 
-            var post = postList.FirstOrDefault(x => x.Id.ToString() == postId);
+            var post = postList.FirstOrDefault(x => x.Id == postId);
 
             return post;
         }
@@ -327,6 +328,27 @@ namespace ToerreTumblr.DAL
             postList[postIndex] = post;
 
             if (post.SharedType=="Public")
+            {
+                var usr = GetUser(post.SourceId);
+                usr.Posts = postList.ToArray();
+                Update(post.Author, usr);
+            }
+
+            else
+            {
+                var circle = GetCircle(post.SourceId);
+                circle.Posts = postList.ToArray();
+                _service.Update(post.SourceId, circle);
+            }
+        }
+
+        public void DeletePost(Post post)
+        {
+            var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
+
+            postList.RemoveAt(postList.FindIndex(x=>x.Id==post.Id));
+
+            if (post.SharedType == "Public")
             {
                 var usr = GetUser(post.SourceId);
                 usr.Posts = postList.ToArray();

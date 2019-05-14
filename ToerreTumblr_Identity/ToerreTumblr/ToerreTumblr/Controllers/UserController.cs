@@ -63,7 +63,7 @@ namespace ToerreTumblr.Controllers
 
         public async Task<IActionResult> ShowWall(string id)
         {
-            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("_CurrentUserId"));
+            var wallPosts = _repo.GetWall(id, GetCurrentUser());
 
             if (wallPosts!=null)
             {
@@ -137,7 +137,7 @@ namespace ToerreTumblr.Controllers
             return View(circle);
         }
 
-        public async Task<IActionResult> EditPost(string postId, string sourceId, string type)
+        public IActionResult EditPost(string postId, string sourceId, string type)
         {
             var post = _repo.GetPost(postId, sourceId, type);
             return View(post);
@@ -145,9 +145,23 @@ namespace ToerreTumblr.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(string postId, [Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
+        public IActionResult EditPost([Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
         {
             _repo.EditPost(post);
+            return RedirectToAction("ShowFeed");
+        }
+
+        public IActionResult DeletePost(string postId, string sourceId, string type)
+        {
+            var post = _repo.GetPost(postId, sourceId, type);
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost([Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
+        {
+            _repo.DeletePost(post);
             return RedirectToAction("ShowFeed");
         }
     }
