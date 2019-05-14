@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ToerreTumblr.Models;
 
@@ -119,15 +121,55 @@ namespace ToerreTumblr.DAL
         // Mangler funktion til addPost
         // Add comment
 
-        public Comment AddComment(string postId, Comment comment, string circleId)
+        public Comment AddComment(string postId, Comment newComment, string sourceId, string sharedType, string userId)
         {
-            Circle circle = _service.GetCircle(circleId);
-            Post post = circle.Posts.FirstOrDefault(p => p.Id == postId);
-            if (post == null)
-                return null;
-            post.Comments.Append(comment);
-            _service.Update(circleId,circle);
-            return comment;
+            Post[] allPosts;
+            var usr = GetUser(userId);
+
+            if (sharedType!="Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                allPosts = source.Posts;
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                allPosts = source.Posts;
+            }
+
+            var postToComment = allPosts.FirstOrDefault(x => x._id == postId);
+            if (postToComment != null)
+            {
+                if (postToComment.Comments == null)
+                {
+                    postToComment.Comments=new Comment[0];
+                }
+                var commentsList = postToComment.Comments.ToList();
+                newComment.Author = usr.Name;
+                commentsList.Add(newComment);
+                postToComment.Comments = commentsList.ToArray();
+            }
+
+            var postIndex = allPosts.ToList().IndexOf(postToComment);
+
+            allPosts[postIndex] = postToComment;
+
+            if (sharedType != "Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                source.Posts = allPosts;
+                _service.Update(sourceId, source);
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                source.Posts = allPosts;
+                Update(sourceId, source); ;
+            }
+            
+            return newComment;
         }
 
         public Comment AddPublicComment(string postId, Comment comment, string userId)
@@ -135,7 +177,7 @@ namespace ToerreTumblr.DAL
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
             if (user.Posts != null)
             {
-                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+                Post post = user.Posts.FirstOrDefault(p => p._id == postId);
                 if (post == null)
                 {
                     return null;
@@ -152,6 +194,7 @@ namespace ToerreTumblr.DAL
             post.SharedType = "Public";
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
+            post.Author = usr.Id;
             if (usr.Posts == null)
             {
                 usr.Posts = new Post[]
@@ -209,7 +252,6 @@ namespace ToerreTumblr.DAL
 
         public User Create(User user)
         {
-            user.Posts=new Post[0];
             _users.InsertOne(user);
             return user;
         }
