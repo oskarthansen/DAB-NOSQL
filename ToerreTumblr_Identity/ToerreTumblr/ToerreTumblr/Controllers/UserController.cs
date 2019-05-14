@@ -85,6 +85,12 @@ namespace ToerreTumblr.Controllers
             return View(users);
         }
 
+        [HttpGet]
+        public List<User> GetUsersJson()
+        {
+            return _repo.GetUsers();
+        }
+
         public IActionResult AddComment(string postId, string sourceId, string sharedType)
         {
             var viewModel = new AddCommentViewModel()
