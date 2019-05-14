@@ -227,6 +227,11 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(u => u.Login == Login && u.Password == password).FirstOrDefault();
         }
 
+        public string GetUserId(string Login)
+        {
+            return _users.Find<User>(u => u.Login == Login).FirstOrDefault().Id;
+        }
+
         public User UserExistInDb(string username)
         {
             return null;
@@ -289,10 +294,7 @@ namespace ToerreTumblr.DAL
             return false;
         }
 
-        public string GetUserId(string Login)
-        {
-            return _users.Find(u => u.Login == Login).FirstOrDefault().Id;
-        }
+        
 
         public List<User> GetUsers()
         {
