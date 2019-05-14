@@ -148,7 +148,7 @@ namespace ToerreTumblr.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditPost([Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
         {
-            _repo.EditPost(post);
+            _repo.EditPost(post, false);
             return RedirectToAction("ShowFeed");
         }
 
@@ -171,7 +171,46 @@ namespace ToerreTumblr.Controllers
             _repo.FollowUser(GetCurrentUser(), id);
             return RedirectToAction("ShowWall", new {id = id});
         }
-        
+
+        public IActionResult EditComment(string commentId, string postId, string sourceId, string type)
+        {
+            var post = _repo.GetPost(postId, sourceId, type);
+            var comment = _repo.GetComment(commentId, post);
+            var viewModel=new EditCommentViewModel()
+            {
+                Post = post,
+                Comment = comment
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditComment(EditCommentViewModel model)
+        {
+            _repo.EditComment(model.Comment, model.Post);
+            return RedirectToAction("ShowFeed");
+        }
+
+        public IActionResult DeleteComment(string commentId, string postId, string sourceId, string type)
+        {
+            var post = _repo.GetPost(postId, sourceId, type);
+            var comment = _repo.GetComment(commentId, post);
+            var viewModel = new EditCommentViewModel()
+            {
+                Post = post,
+                Comment = comment
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteComment(EditCommentViewModel model)
+        {
+            _repo.DeleteComment(model.Comment, model.Post);
+            return RedirectToAction("ShowFeed");
+        }
 
     }
 }

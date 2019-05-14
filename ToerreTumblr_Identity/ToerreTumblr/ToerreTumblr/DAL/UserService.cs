@@ -366,11 +366,16 @@ namespace ToerreTumblr.DAL
             return post;
         }
 
-        public void EditPost(Post post)
+        public void EditPost(Post post, bool isCommentsUpdate)
         {
             var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
-            var oldPost = GetPost(post.Id, post.SourceId, post.SharedType);
-            post.Comments = oldPost.Comments;
+
+            if (isCommentsUpdate==false)
+            {
+                var oldPost = GetPost(post.Id, post.SourceId, post.SharedType);
+                post.Comments = oldPost.Comments;
+            }
+            
 
             var postIndex = postList.FindIndex(x => x.Id == post.Id);
             postList[postIndex] = post;
@@ -486,6 +491,37 @@ namespace ToerreTumblr.DAL
             }
             Update(currentUserId,currentUser);
             Update(userToFollowId,UserToFollow);
+        }
+
+        public Comment GetComment(string commentId, Post post)
+        {
+            var comment = post.Comments.FirstOrDefault(x => x.Id == commentId);
+            return comment;
+        }
+
+        public void EditComment(Comment comment, Post postIds)
+        {
+            var post = GetPost(postIds.Id, postIds.SourceId, postIds.SharedType);
+            var commentsList = post.Comments.ToList();
+
+            var commentIndex = commentsList.FindIndex(x => x.Id == comment.Id);
+            commentsList[commentIndex] = comment;
+            post.Comments = commentsList.ToArray();
+
+            EditPost(post, true);
+        }
+
+        public void DeleteComment(Comment comment, Post postIds)
+        {
+            var post = GetPost(postIds.Id, postIds.SourceId, postIds.SharedType);
+            var commentsList = post.Comments.ToList();
+
+            var commentIndex = commentsList.FindIndex(x => x.Id == comment.Id);
+            commentsList.RemoveAt(commentIndex);
+
+            post.Comments = commentsList.ToArray();
+
+            EditPost(post, true);
         }
 
     }

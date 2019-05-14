@@ -7,40 +7,49 @@
 
 <div style="justify-content: center">
     <h2>My feed</h2>
+    <a asp-action="AddPost">Add a post</a>
     @for (int i = 0; i < Model.Count; ++i)
     {
-    <div class="feed-post">
-        <p>@Model[i].Text</p>
-        @if (Model[i].Image != null)
-        {
-            <img src="~/Images/@Model[i].Image" />
-        }
-
-        <p>By: <a asp-action="ShowWall" asp-route-id="@Model[i].Author">@Model[i].AuthorName</a></p>
-        <p>Shared with: @Model[i].SharedType</p>
-        <p>Created: @Model[i].CreationTime.ToString("f")</p>
-        @if (Model[i].Author == ViewBag.CurrentUser)
-        {
-            <a asp-action="EditPost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Edit</a> @: |
-            <a asp-action="DeletePost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Delete</a> @: |
-        }
-        <a asp-action="AddComment" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-sharedType="@Model[i].SharedType">Add a comment</a>
-        <div class="post-comments">
-            <p><b>Comments:</b></p>
-            @if (Model[i].Comments != null)
+        <div class="feed-post">
+            <p>@Model[i].Text</p>
+            @if (Model[i].Image != null)
             {
-                for (int j = 0; j < Model[i].Comments.Length; ++j)
-                {
-                    <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].AuthorId">@Model[i].Comments[j].Author:</a>
-                    <p>@Model[i].Comments[j].Text</p>
-                }
+                <img src="~/Images/@Model[i].Image" />
             }
 
+            <p>By: <a asp-action="ShowWall" asp-route-id="@Model[i].Author">@Model[i].AuthorName</a></p>
+            <p>Shared with: @Model[i].SharedType</p>
+            <p>Created: @Model[i].CreationTime.ToString("f")</p>
+            @if (Model[i].Author == ViewBag.CurrentUser)
+            {
+                <a asp-action="EditPost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Edit</a> @: |
+                <a asp-action="DeletePost" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Delete</a> @: |
+            }
+            <a asp-action="AddComment" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-sharedType="@Model[i].SharedType">Add a comment</a>
+            <div class="post-comments">
+                <p><b>Comments:</b></p>
+                @if (Model[i].Comments != null)
+                {
+                    for (int j = 0; j < Model[i].Comments.Length; ++j)
+                    {
+                        <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].AuthorId">@Model[i].Comments[j].Author:</a>
+                        <p>@Model[i].Comments[j].Text</p>
+                        if (Model[i].Comments[j].AuthorId == ViewBag.CurrentUser)
+                        {
+                             <a asp-action="EditComment" asp-route-commentId="@Model[i].Comments[j].Id" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Edit</a> @: |
+                        }
+                        if (Model[i].Author==ViewBag.CurrentUser|| Model[i].Comments[j].AuthorId == ViewBag.CurrentUser)
+                        {
+                             <a asp-action="DeleteComment" asp-route-commentId="@Model[i].Comments[j].Id" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-type="@Model[i].SharedType">Delete</a>
+                        }
+                        <br/>
+                    }
+                }
+
+            </div>
         </div>
-    </div>
         <hr />
     }
-    <a asp-action="AddPost">Add a post</a>
 </div>
 
 
