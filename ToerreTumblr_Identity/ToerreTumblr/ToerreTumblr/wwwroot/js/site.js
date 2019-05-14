@@ -14,6 +14,7 @@ $(document.body).click(function () {
 $('#myInput').click(function (e) {
     e.stopPropagation();
     if (!toggleMenu) {
+
         var url = "/User/GetUsersJson";
         $.get(url, function (users) {
             users.forEach(function (username) {

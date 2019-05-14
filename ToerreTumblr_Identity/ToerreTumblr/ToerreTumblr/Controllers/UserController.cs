@@ -79,6 +79,7 @@ namespace ToerreTumblr.Controllers
             return NotFound();
         }
 
+
         public IActionResult GetUsers()
         {
             var users = _repo.GetUsers();
@@ -88,7 +89,7 @@ namespace ToerreTumblr.Controllers
         [HttpGet]
         public List<User> GetUsersJson()
         {
-            return _repo.GetUserNames();
+            return _repo.GetUsers();
         }
 
         public IActionResult AddComment(string postId, string sourceId, string sharedType)
