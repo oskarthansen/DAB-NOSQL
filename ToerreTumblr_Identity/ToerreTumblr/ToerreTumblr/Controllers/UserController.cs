@@ -36,7 +36,7 @@ namespace ToerreTumblr.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPublicPost([Bind("Text")]Post post)
+        public IActionResult AddPublicPost([Bind("Text, Image")]Post post)
         {
             _repo.AddPost(HttpContext.Session.GetString("_CurrentUserId"),post);
             return RedirectToAction("ShowFeed");
