@@ -5,8 +5,9 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
-
+<link type="text/css" href="css/site.css"/>
 <h2>@Model.User.Name's Wall</h2>
+<h3>Posts</h3>
 
 @for (int i = 0; i < Model.Posts.Count; ++i)
 {
@@ -21,13 +22,13 @@
     <p>Shared with: @Model.Posts[i].SharedType</p>
     <a asp-action="AddComment" asp-route-postId="@Model.Posts[i].Id" asp-route-sourceId="@Model.Posts[i].SourceId" asp-route-sharedType="@Model.Posts[i].SharedType">Add a comment</a>
     <div class="post-comments">
+        <h5>Comments:</h5>
         @if (Model.Posts[i].Comments != null)
         {
             for (int j = 0; j < Model.Posts[i].Comments.Length; ++j)
             {
                 <a asp-action="ShowWall" asp-route-id="@Model.Posts[i].Comments[j].AuthorId">@Model.Posts[i].Comments[j].Author:</a>
                 <p>@Model.Posts[i].Comments[j].Text</p>
-                <hr />
             }
         }
     </div>

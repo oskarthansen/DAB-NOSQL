@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
     <environment exclude="Development">
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
@@ -45,8 +46,10 @@
                         </li>                        
                     </ul>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-5">
-                    <input id="myInput" asp-controller="" class="form-control" type="text" placeholder="Search" aria-label="Search">
+                <div  class="col-lg-5 col-md-5 col-sm-5" id="listView">
+                    <input id="myInput" onkeyup="myFunction()" class="form-control" type="text" placeholder="Search" aria-label="Search">
+                    <ul id="myUL">
+                    </ul>
                 </div>
             </div>
         </nav>
