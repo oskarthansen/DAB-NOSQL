@@ -24,17 +24,32 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label">Insert User</label>
-                <input asp-for="Users" class="form-control" value=""/>
-                <span asp-validation-for="Users" class="text-danger"></span>
+                <label class="control-label">Circle members (comma seperate)</label>
+
+                
+                <div class="row">
+                    <div class="col-10">
+                        <input asp-for="Users" class="form-control" value=""/>
+                        <span asp-validation-for="Users" class="text-danger"></span>
+                    </div>
+                    <div class="col-1">
+                        <span>Add</span>
+                    </div>
+                </div>
 
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
 
-
         </form>
+    </div>
+    <div class="col-md-8">
+        <h4>Users:</h4>
+        @foreach (var username in Model.Users)
+        {
+            <p>@username</p>
+        }
     </div>
 </div>
 

@@ -405,12 +405,12 @@ namespace ToerreTumblr.DAL
                 _service.Update(post.SourceId, circle);
             }
         }
-			
-		public List<User> GetUserNames()
+
+        public List<string> GetUserNames()
         {
             var userNames = _users.AsQueryable()
                 .Where(e => e.Name.Length > 0)
-                .Select(e => e)
+                .Select(e => e.Name)
                 .ToList();
 
             return userNames;

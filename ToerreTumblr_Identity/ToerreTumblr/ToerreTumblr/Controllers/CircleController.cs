@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Differencing;
+using Microsoft.AspNetCore.ResponseCaching.Internal;
 using Microsoft.Extensions.Configuration;
 using ToerreTumblr.DAL;
 using ToerreTumblr.Models;
@@ -42,12 +43,25 @@ namespace ToerreTumblr.Controllers
 
             CircleViewModel vm = new CircleViewModel()
             {
-                Users = new List<string>()
+                Users = _userService.GetUserNames()
             };
             
 
             return View(vm);
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public User AddMemberToCircle(string id, string circleId)
+        {
+            var usr = _userService.GetUser(id);
+            if (usr != null)
+            {
+
+            }
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,6 +78,7 @@ namespace ToerreTumblr.Controllers
                 dummy = _userService.GetUserId(vm.Users[i]);
                 vm.Users[i] = dummy;
             }
+
             vm.Users.Add(HttpContext.Session.GetString("_CurrentUserId"));
             _circleService.CreateCircle(vm.Users,vm.Name);
 
