@@ -12,7 +12,7 @@ namespace ToerreTumblr.DAL
     {
         private readonly IMongoCollection<User> _users;
         private CircleService _service;
-        
+         
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
@@ -30,6 +30,7 @@ namespace ToerreTumblr.DAL
             {
                 return new List<User>();
             }
+            
 
             List<User> followingUsers = new List<User>();
             followingUsers = _users.Find(user => usr.Following.Contains(user.Id)).ToList();
@@ -241,9 +242,8 @@ namespace ToerreTumblr.DAL
 
         public List<User> GetAllUsers()
         {
-            var coll = _users.AsQueryable();
-            List<User>e = coll.ToList();
-            return e;
+            var coll = _users.Find(_=>true).ToList();
+            return coll;
         }
 
     }

@@ -32,9 +32,10 @@ namespace ToerreTumblr.Controllers
 
             CircleViewModel vm = new CircleViewModel()
             {
-                Users = _userService.GetAllUsers(),
+                Users = new List<User>(),
                 Circle = new Circle()
             };
+            vm.Users = _userService.GetAllUsers();
             
 
             return View(vm);
