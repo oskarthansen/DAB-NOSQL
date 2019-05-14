@@ -54,7 +54,7 @@ namespace ToerreTumblr.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPost([Bind("Text, Image")]Post post)
+        public IActionResult AddPost([Bind("Text, Image, SharedType")]Post post)
         {
             _repo.AddPost(GetCurrentUser(),post);
             return RedirectToAction("ShowFeed");

@@ -86,8 +86,13 @@ namespace ToerreTumblr.DAL
                 posts.AddRange(currentUser.Posts);
             }
             
+            var sortedPosts=posts.OrderBy(x=>x.CreationTime.TimeOfDay)
+                .ThenBy(x=>x.CreationTime.Date)
+                .ThenBy(x=>x.CreationTime.Year).Reverse().ToList();
 
-            return posts;
+
+
+            return sortedPosts;
         }
 
         public List<Post> GetWall(string userId, string guestId)
@@ -130,7 +135,7 @@ namespace ToerreTumblr.DAL
 
             if (sharedType!="Public")
             {
-                var source = _service.GetCircle(sourceId);
+                var source = GetCircle(sourceId);
                 allPosts = source.Posts;
             }
 
@@ -179,33 +184,44 @@ namespace ToerreTumblr.DAL
         {
             post.Id = ObjectId.GenerateNewId(DateTime.Now);
             post.CreationTime = DateTime.Now;
-            if (post.SharedType==null)
-            {
-                post.SharedType = "Public";
-            }
-            else
-            {
-                post.SharedType = GetCircle(post.SharedType).Name;
-            }
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
             post.Author = usr.Id;
-            if (usr.Posts == null)
+
+            if (post.SharedType==null)
             {
-                usr.Posts = new Post[]
+                post.SharedType = "Public";
+                post.SourceId = usr.Id;
+
+                if (usr.Posts == null)
                 {
-                    post
-                };
+                    usr.Posts = new Post[0];
+                }
+
+                var usrPosts = usr.Posts.ToList();
+                usrPosts.Add(post);
+                usr.Posts = usrPosts.ToArray();
+
+                Update(userId, usr);
             }
             else
             {
-                Post[] posts = usr.Posts;
-                Post[] newPosts = new Post[posts.Length + 1]; //Added one to length
-                Array.Copy(posts, newPosts, posts.Length);
-                newPosts[posts.Length] = post;
-                usr.Posts = newPosts;
+                var circle = GetCircle(post.SharedType);
+                post.SharedType = circle.Name;
+                post.SourceId = circle.Id;
+                if (circle.Posts==null)
+                {
+                    circle.Posts=new Post[0];
+                }
+
+                var circlePosts = circle.Posts.ToList();
+                circlePosts.Add(post);
+                circle.Posts = circlePosts.ToArray();
+
+                _service.Update(circle.Id, circle);
             }
-            Update(userId, usr);
+            
+            
             return post;
 
             // Hvis ikke det virker så kald update () 
