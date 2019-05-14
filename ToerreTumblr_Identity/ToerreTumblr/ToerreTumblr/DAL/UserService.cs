@@ -57,12 +57,12 @@ namespace ToerreTumblr.DAL
         public List<Post> GetFeed(string userId)
         {
             var following = GetFollowing(userId);
-
+            var currentUser = GetUser(userId);
             // Find alle posts for dem der følges
             List<Post> posts = new List<Post>();
             foreach (var user in following)
             {
-                if (user.Posts != null )
+                if (user.Posts != null)
                 {
                     if (user.Blocked == null)
                     {
@@ -73,7 +73,6 @@ namespace ToerreTumblr.DAL
                         if(!user.Blocked.Contains(userId))
                             posts.AddRange(user.Posts.ToList());
                     }
-                    
                 }
             }
 
@@ -87,8 +86,6 @@ namespace ToerreTumblr.DAL
                 }
                 
             }
-
-            User currentUser = GetUser(userId);
             if (currentUser.Posts != null)
             {
                 posts.AddRange(currentUser.Posts);
@@ -297,27 +294,43 @@ namespace ToerreTumblr.DAL
             _users.DeleteOne(user => user.Id == userIn.Id);
         }
 
-        public void BlockUser(string UserToBlock, string UserId)
+        public void BlockUser(string userToBlock, string UserId)
         {
             var user = GetUser(UserId);
+            var UserToBlock = GetUser(userToBlock);
             if (user.Blocked == null)
             {
                 user.Blocked = new string[]
                 {
-                    UserToBlock
+                    userToBlock
                 };
             }
             else
             {
-                if (!user.Blocked.Contains(UserToBlock))
+                if (!user.Blocked.Contains(userToBlock))
                 {
                     string[] newBlocked = new string[user.Blocked.Length + 1];
                     Array.Copy(user.Blocked, newBlocked, user.Blocked.Length);
-                    newBlocked[user.Blocked.Length] = UserToBlock;
+                    newBlocked[user.Blocked.Length] = userToBlock;
                     user.Blocked = newBlocked;
                 }
             }
+
+            if (user.Following != null)
+            {
+                if (user.Following.Contains(userToBlock))
+                {
+                    List<string> newFollowing = user.Following.ToList();
+                    newFollowing.Remove(userToBlock);
+                    user.Following = newFollowing.ToArray();
+                }
+            }
+
+            List<string> newFollowers = UserToBlock.Followers.ToList();
+            newFollowers.Remove(UserId);
+            UserToBlock.Followers = newFollowers.ToArray();
             Update(UserId,user);
+            Update(userToBlock,UserToBlock);
         }
 
         public Circle GetCircle(string id)
@@ -428,7 +441,16 @@ namespace ToerreTumblr.DAL
                     newFollowing[currentUser.Following.Length] = userToFollowId;
                     currentUser.Following = newFollowing;
                 }
-                
+            }
+
+            if (currentUser.Blocked != null)
+            {
+                if (currentUser.Blocked.Contains(userToFollowId))
+                {
+                    List<string> newBlocked = currentUser.Blocked.ToList();
+                    newBlocked.Remove(userToFollowId);
+                    currentUser.Blocked = newBlocked.ToArray();
+                }
             }
 
             //Add user to followers list of userToFollow
