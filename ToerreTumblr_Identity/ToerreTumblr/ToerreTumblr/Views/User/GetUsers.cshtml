@@ -11,10 +11,9 @@
     @foreach (var user in Model)
     {
         <p>@user.Name</p>
+        <a asp-action="FollowUser" asp-route-id="@user.Id">Follow</a> @:|
+        <a asp-action="BlockUser" asp-route-id="@user.Id">Block</a> 
         <p>@user.Id</p>
     }
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    
 </div>

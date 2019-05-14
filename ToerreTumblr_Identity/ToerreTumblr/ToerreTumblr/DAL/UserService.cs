@@ -287,8 +287,8 @@ namespace ToerreTumblr.DAL
         public void BlockUser(string UserToBlock, string UserId)
         {
             var user = GetUser(UserId);
-
-            user.Blocked.Append(UserToBlock);
+            
+            
 
         }
 
@@ -361,6 +361,49 @@ namespace ToerreTumblr.DAL
                 circle.Posts = postList.ToArray();
                 _service.Update(post.SourceId, circle);
             }
+        }
+
+        public void FollowUser(string currentUserId, string userToFollowId)
+        {
+            var currentUser = _users.Find(u => u.Id == currentUserId).FirstOrDefault();
+            var UserToFollow = _users.Find(u => u.Id == userToFollowId).FirstOrDefault();
+            if (currentUser == null | UserToFollow == null)
+            {
+                return;
+            }
+            //Update current user
+            if (currentUser.Following == null)
+            {
+                currentUser.Following = new string[]
+                {
+                    userToFollowId
+                };
+            }
+            else
+            {
+                string[] newFollowing = new string[currentUser.Following.Length+1];
+                Array.Copy(currentUser.Following,newFollowing,currentUser.Following.Length);
+                newFollowing[currentUser.Following.Length] = userToFollowId;
+                currentUser.Following = newFollowing;
+            }
+
+            //Add user to followers list of userToFollow
+            if (UserToFollow.Followers == null)
+            {
+                UserToFollow.Followers = new string[]
+                {
+                    userToFollowId
+                };
+            }
+            else
+            {
+                string[] newFollowers = new string[UserToFollow.Followers.Length+1];
+                Array.Copy(UserToFollow.Followers,newFollowers,UserToFollow.Followers.Length);
+                newFollowers[UserToFollow.Followers.Length] = currentUserId;
+                UserToFollow.Followers = newFollowers;
+            }
+            Update(currentUserId,currentUser);
+            Update(userToFollowId,UserToFollow);
         }
     }
 }
