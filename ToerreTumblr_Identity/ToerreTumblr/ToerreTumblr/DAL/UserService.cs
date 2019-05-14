@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,7 +14,7 @@ namespace ToerreTumblr.DAL
     {
         private readonly IMongoCollection<User> _users;
         private CircleService _service;
-        
+         
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
@@ -32,6 +33,7 @@ namespace ToerreTumblr.DAL
             {
                 return new List<User>();
             }
+            
 
             List<User> followingUsers = new List<User>();
             followingUsers = _users.Find(user => usr.Following.Contains(user.Id)).ToList();
@@ -121,16 +123,55 @@ namespace ToerreTumblr.DAL
         // Mangler funktion til addPost
         // Add comment
 
-        public Comment AddComment(string postId, Comment comment, string circleId)
+        public Comment AddComment(string postId, Comment newComment, string sourceId, string sharedType, string userId)
         {
-            comment.Id = ObjectId.GenerateNewId(DateTime.Now);
-            Circle circle = _service.GetCircle(circleId);
-            Post post = circle.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
-            if (post == null)
-                return null;
-            post.Comments.Append(comment);
-            _service.Update(circleId,circle);
-            return comment;
+            Post[] allPosts;
+            var usr = GetUser(userId);
+
+            if (sharedType!="Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                allPosts = source.Posts;
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                allPosts = source.Posts;
+            }
+
+            var postToComment = allPosts.FirstOrDefault(x => x._id == postId);
+            if (postToComment != null)
+            {
+                if (postToComment.Comments == null)
+                {
+                    postToComment.Comments=new Comment[0];
+                }
+                var commentsList = postToComment.Comments.ToList();
+                newComment.Author = usr.Name;
+                commentsList.Add(newComment);
+                postToComment.Comments = commentsList.ToArray();
+            }
+
+            var postIndex = allPosts.ToList().IndexOf(postToComment);
+
+            allPosts[postIndex] = postToComment;
+
+            if (sharedType != "Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                source.Posts = allPosts;
+                _service.Update(sourceId, source);
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                source.Posts = allPosts;
+                Update(sourceId, source); ;
+            }
+            
+            return newComment;
         }
 
         public Comment AddPublicComment(string postId, Comment comment, string userId)
@@ -138,7 +179,7 @@ namespace ToerreTumblr.DAL
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
             if (user.Posts != null)
             {
-                Post post = user.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
+                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
                 if (post == null)
                 {
                     return null;
@@ -156,6 +197,7 @@ namespace ToerreTumblr.DAL
             post.SharedType = "Public";
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
+            post.Author = usr.Id;
             if (usr.Posts == null)
             {
                 usr.Posts = new Post[]
@@ -213,7 +255,6 @@ namespace ToerreTumblr.DAL
 
         public User Create(User user)
         {
-            user.Posts=new Post[0];
             _users.InsertOne(user);
             return user;
         }
@@ -246,5 +287,21 @@ namespace ToerreTumblr.DAL
         {
             return _service.GetCircle(id);
         }
+
+        public bool CheckIfUserExist(string Login)
+        {
+            var usertocheck = _users.Find(u => u.Login == Login);
+
+            if (usertocheck != null)
+                return true;
+            return false;
+        }
+
+        public string GetUserId(string Login)
+        {
+            return _users.Find(u => u.Login == Login).FirstOrDefault().Id;
+        }
+
+
     }
 }
