@@ -12,7 +12,7 @@ namespace ToerreTumblr.Models
 
         [BsonId]
         //[BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }
+        public ObjectId? Id { get; set; }
 
         [BsonElement("Text")]
         public string Text { get; set; }
