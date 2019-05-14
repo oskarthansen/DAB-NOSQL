@@ -11,6 +11,7 @@ namespace ToerreTumblr.DAL
     public class CircleService
     {
         private readonly IMongoCollection<Circle> _circles;
+        private readonly UserService _userService;
 
         public CircleService(IConfiguration config)
         {
@@ -74,5 +75,28 @@ namespace ToerreTumblr.DAL
             userIds.Remove(userId);
             circle.UserIds = userIds.ToArray();
         }
+
+
+        public void CreateCircle(List<string> users, string name)
+        {
+            int length = users.Count();
+            string[] userArray = new string[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                userArray[i] = users[i];
+            }
+
+            Circle circleToInsert = new Circle()
+            {
+                Name = name,
+                UserIds = userArray
+            };
+            
+            _circles.InsertOne(circleToInsert);
+            
+
+        }
+
     }
 }

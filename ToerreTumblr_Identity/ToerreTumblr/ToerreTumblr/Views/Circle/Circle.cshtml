@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ToerreTumblr.Models.Circle>
+
+@{
+    ViewData["Title"] = "Circle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Circle</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+</table>

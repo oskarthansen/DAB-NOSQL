@@ -14,7 +14,7 @@ namespace ToerreTumblr.DAL
     {
         private readonly IMongoCollection<User> _users;
         private CircleService _service;
-        
+         
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
@@ -32,6 +32,7 @@ namespace ToerreTumblr.DAL
             {
                 return new List<User>();
             }
+            
 
             List<User> followingUsers = new List<User>();
             followingUsers = _users.Find(user => usr.Following.Contains(user.Id)).ToList();
@@ -232,10 +233,6 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(u => u.Login == Login && u.Password == password).FirstOrDefault();
         }
 
-        public User UserExistInDb(string username)
-        {
-            return null;
-        }
 
         public bool Login(User user)
         {
@@ -284,5 +281,21 @@ namespace ToerreTumblr.DAL
         {
             return _service.GetCircle(id);
         }
+
+        public bool CheckIfUserExist(string Login)
+        {
+            var usertocheck = _users.Find(u => u.Login == Login);
+
+            if (usertocheck != null)
+                return true;
+            return false;
+        }
+
+        public string GetUserId(string Login)
+        {
+            return _users.Find(u => u.Login == Login).FirstOrDefault().Id;
+        }
+
+
     }
 }
