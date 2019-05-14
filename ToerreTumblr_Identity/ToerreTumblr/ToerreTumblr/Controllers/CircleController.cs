@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.Extensions.Configuration;
 using ToerreTumblr.DAL;
 using ToerreTumblr.Models;
@@ -81,6 +82,21 @@ namespace ToerreTumblr.Controllers
             return View();
         }
 
+        public IActionResult Edit(string id)
+        {
+            var circle =_circleService.GetCircle(id);
+
+            return View(circle);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Circle circle)
+        {
+            _circleService.Update(circle.Id, circle);
+
+            return RedirectToAction("Circle");
+        }
 
     }
 }
