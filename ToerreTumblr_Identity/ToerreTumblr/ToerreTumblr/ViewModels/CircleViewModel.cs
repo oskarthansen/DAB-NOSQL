@@ -8,7 +8,7 @@ namespace ToerreTumblr.ViewModels
 {
     public class CircleViewModel
     {
-        public List<User> Users { get; set; }
+        public List<string> Users { get; set; }
         public Circle Circle { get; set; }
     }
 }

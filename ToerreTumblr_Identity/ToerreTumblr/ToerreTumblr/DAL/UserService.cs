@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ToerreTumblr.Models;
 
@@ -240,11 +241,20 @@ namespace ToerreTumblr.DAL
             return _service.GetCircle(id);
         }
 
-        public List<User> GetAllUsers()
+        public bool CheckIfUserExist(string Login)
         {
-            var coll = _users.Find(_=>true).ToList();
-            return coll;
+            var usertocheck = _users.Find(u => u.Login == Login);
+
+            if (usertocheck != null)
+                return true;
+            return false;
         }
+
+        public string GetUserId(string Login)
+        {
+            return _users.Find(u => u.Login == Login).FirstOrDefault().Id;
+        }
+
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -32,14 +33,36 @@ namespace ToerreTumblr.Controllers
 
             CircleViewModel vm = new CircleViewModel()
             {
-                Users = new List<User>(),
+                Users = new List<string>(),
                 Circle = new Circle()
             };
-            vm.Users = _userService.GetAllUsers();
-            
+
 
             return View(vm);
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CircleViewModel vm)
+        {
+
+
+
+            for (int i = 0; i < vm.Users.Count(); i++)
+            {
+                if (_userService.CheckIfUserExist(vm.Users[i]))
+                {
+                    vm.Circle.UserIds[i] = _userService.GetUserId(vm.Users[i]);
+                    
+                }
+                else
+                {
+                    return RedirectToAction("Circle", "Circle");
+                }
+                
+            }
+
+            return RedirectToAction("Circle", "Circle");
+        }
     }
 }
