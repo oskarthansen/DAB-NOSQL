@@ -35,6 +35,9 @@ namespace ToerreTumblr.Models
         [BsonElement("SharedType")]
         public string SharedType { get; set; }
 
+        [BsonElement("SourceId")]
+        public string SourceId { get; set; }
+
 
     }
 }

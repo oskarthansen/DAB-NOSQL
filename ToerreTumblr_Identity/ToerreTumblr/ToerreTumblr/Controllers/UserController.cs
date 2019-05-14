@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using ToerreTumblr.DAL;
 using ToerreTumblr.Models;
@@ -14,6 +15,7 @@ namespace ToerreTumblr.Controllers
     public class UserController : Controller
     {
         private UserService _repo;
+        private CircleService _circleRepo;
 
         public string GetCurrentUser()
         {
@@ -22,42 +24,58 @@ namespace ToerreTumblr.Controllers
         public UserController(IConfiguration config)
         {
             _repo = new UserService(config);
+            _circleRepo=new CircleService(config);
         }
         public async Task<IActionResult> ShowFeed()
         {
-            List<Post> feed = _repo.GetFeed(HttpContext.Session.GetString("_CurrentUserId"));
+            List<Post> feed = _repo.GetFeed(GetCurrentUser());
             return View(feed);
         }
 
-        public IActionResult AddPublicPost()
+        public IActionResult AddPost()
         {
+            var circles = _circleRepo.GetCirclesForUser(GetCurrentUser());
+            circles.Add(new Circle
+            {
+                Id = null,
+                Name = "Public"
+            });
+
+            IEnumerable<SelectListItem> selectList = from c in circles
+                select new SelectListItem
+                {
+                    Value = c.Id,
+                    Text = c.Name
+                };
+
+            ViewData["SharedWith"] = new SelectList(selectList, "Value", "Text");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPublicPost([Bind("Text")]Post post)
+        public IActionResult AddPost([Bind("Text, Image, SharedType")]Post post)
         {
-            _repo.AddPost(HttpContext.Session.GetString("_CurrentUserId"),post);
+            _repo.AddPost(GetCurrentUser(),post);
             return RedirectToAction("ShowFeed");
         }
 
-        public IActionResult AddPost(string circleId)
-        {
-            return View();
-        }
+        //public IActionResult AddPost(string circleId)
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddPost(string circleId, [Bind("Text")] Post post)
-        {
-            post.CreationTime = DateTime.Now;
-            post.Author = HttpContext.Session.GetString("_CurrentUserId");
-            post.AuthorName = _repo.GetUser(post.Author).Name;
-            _repo.AddPost(post.Author, post,circleId);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult AddPost(string circleId, [Bind("Text")] Post post)
+        //{
+        //    post.CreationTime = DateTime.Now;
+        //    post.Author = GetCurrentUser();
+        //    post.AuthorName = _repo.GetUser(post.Author).Name;
+        //    _repo.AddPost(post.Author, post,circleId);
 
-            return RedirectToAction("ShowCircle",new {id = circleId});
-        }
+        //    return RedirectToAction("ShowCircle",new {id = circleId});
+        //}
 
         public async Task<IActionResult> ShowWall(string id)
         {

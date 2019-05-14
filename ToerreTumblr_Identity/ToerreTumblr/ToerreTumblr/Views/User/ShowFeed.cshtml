@@ -19,7 +19,7 @@
         <p>By: @Model[i].AuthorName</p>
         <p>From: @Model[i].SharedType</p>
         <p>Created: @Model[i].CreationTime.ToString("f")</p>
-        <a asp-action="AddComment" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].Author" asp-route-sharedType="@Model[i].SharedType">Add a comment</a>
+        <a asp-action="AddComment" asp-route-postId="@Model[i].Id" asp-route-sourceId="@Model[i].SourceId" asp-route-sharedType="@Model[i].SharedType">Add a comment</a>
         <div class="post-comments">
             @if (Model[i].Comments != null)
             {
@@ -35,7 +35,7 @@
     </div>
         <hr />
     }
-    <a asp-action="AddPublicPost">Add a public post</a>
+    <a asp-action="AddPost">Add a post</a>
 </div>
 
 

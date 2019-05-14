@@ -90,12 +90,12 @@ namespace ToerreTumblr.DAL
             Circle circleToInsert = new Circle()
             {
                 Name = name,
-                UserIds = userArray
+                UserIds = userArray,
+                Posts = new Post[0]
             };
             
             _circles.InsertOne(circleToInsert);
             
-
         }
 
     }
