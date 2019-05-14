@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -23,6 +24,7 @@ namespace ToerreTumblr.DAL
         }
 
 
+        // Skal måske laves om til at hpndtere array i stedet
         public List<User> GetFollowing(string userId)
         {
             var usr = GetUser(userId);
@@ -121,15 +123,56 @@ namespace ToerreTumblr.DAL
         // Mangler funktion til addPost
         // Add comment
 
-        public Comment AddComment(string postId, Comment comment, string circleId)
+        public Comment AddComment(string postId, Comment newComment, string sourceId, string sharedType, string userId)
         {
-            Circle circle = _service.GetCircle(circleId);
-            Post post = circle.Posts.FirstOrDefault(p => p.Id == postId);
-            if (post == null)
-                return null;
-            post.Comments.Append(comment);
-            _service.Update(circleId,circle);
-            return comment;
+            Post[] allPosts;
+            var usr = GetUser(userId);
+
+            if (sharedType!="Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                allPosts = source.Posts;
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                allPosts = source.Posts;
+            }
+
+            var postToComment = allPosts.FirstOrDefault(x => x.Id.ToString() == postId);
+            if (postToComment != null)
+            {
+                if (postToComment.Comments == null)
+                {
+                    postToComment.Comments=new Comment[0];
+                }
+                var commentsList = postToComment.Comments.ToList();
+                newComment.Author = usr.Name;
+                newComment.AuthorId = usr.Id;
+                newComment.Id = ObjectId.GenerateNewId(DateTime.Now);
+                commentsList.Add(newComment);
+                postToComment.Comments = commentsList.ToArray();
+            }
+
+            var postIndex = allPosts.ToList().IndexOf(postToComment);
+
+            allPosts[postIndex] = postToComment;
+
+            if (sharedType != "Public")
+            {
+                var source = _service.GetCircle(sourceId);
+                source.Posts = allPosts;
+                _service.Update(sourceId, source);
+            }
+
+            else
+            {
+                var source = GetUser(sourceId);
+                source.Posts = allPosts;
+                Update(sourceId, source); ;
+            }
+            return newComment;
         }
 
         public Comment AddPublicComment(string postId, Comment comment, string userId)
@@ -137,7 +180,7 @@ namespace ToerreTumblr.DAL
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
             if (user.Posts != null)
             {
-                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+                Post post = user.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
                 if (post == null)
                 {
                     return null;
@@ -150,10 +193,12 @@ namespace ToerreTumblr.DAL
 
         public Post AddPost(string userId, Post post)
         {
+            post.Id = ObjectId.GenerateNewId(DateTime.Now);
             post.CreationTime = DateTime.Now;
             post.SharedType = "Public";
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
+            post.Author = usr.Id;
             if (usr.Posts == null)
             {
                 usr.Posts = new Post[]
@@ -165,11 +210,11 @@ namespace ToerreTumblr.DAL
             {
                 Post[] posts = usr.Posts;
                 Post[] newPosts = new Post[posts.Length + 1]; //Added one to length
-                Array.Copy(posts,newPosts,posts.Length);
+                Array.Copy(posts, newPosts, posts.Length);
                 newPosts[posts.Length] = post;
                 usr.Posts = newPosts;
             }
-            Update(userId,usr);
+            Update(userId, usr);
             return post;
 
             // Hvis ikke det virker så kald update () 
@@ -196,6 +241,10 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(u => u.Login == Login).FirstOrDefault().Id;
         }
 
+        public User UserExistInDb(string username)
+        {
+            return null;
+        }
 
         public bool Login(User user)
         {
@@ -212,7 +261,6 @@ namespace ToerreTumblr.DAL
 
         public User Create(User user)
         {
-            user.Posts=new Post[0];
             _users.InsertOne(user);
             return user;
         }
@@ -256,6 +304,11 @@ namespace ToerreTumblr.DAL
         }
 
         
+
+        public List<User> GetUsers()
+        {
+            return _users.Find(user => true).ToList();
+        }
 
 
     }

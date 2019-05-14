@@ -10,9 +10,11 @@ namespace ToerreTumblr.Models
     public class Comment
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        
+        public ObjectId Id { get; set; }
+
+        [BsonElement("AuthorId")]
+        public string AuthorId { get; set; }
+
         [BsonElement("Author")]
         public string Author{ get; set; }
 

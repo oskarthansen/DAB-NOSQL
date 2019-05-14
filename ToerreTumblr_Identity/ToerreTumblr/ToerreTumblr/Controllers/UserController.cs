@@ -14,6 +14,11 @@ namespace ToerreTumblr.Controllers
     public class UserController : Controller
     {
         private UserService _repo;
+
+        public string GetCurrentUser()
+        {
+            return HttpContext.Session.GetString("_CurrentUserId");
+        }
         public UserController(IConfiguration config)
         {
             _repo = new UserService(config);
@@ -31,7 +36,7 @@ namespace ToerreTumblr.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPublicPost([Bind("Text")]Post post)
+        public IActionResult AddPublicPost([Bind("Text, Image")]Post post)
         {
             _repo.AddPost(HttpContext.Session.GetString("_CurrentUserId"),post);
             return RedirectToAction("ShowFeed");
@@ -77,6 +82,12 @@ namespace ToerreTumblr.Controllers
             return View();
         }
 
+        public IActionResult GetUsers()
+        {
+            var users = _repo.GetUsers();
+            return View(users);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
@@ -85,17 +96,24 @@ namespace ToerreTumblr.Controllers
             return RedirectToAction("ShowFeed");
         }
 
-        public IActionResult AddComment(string postId, string circleId)
+        public IActionResult AddComment(string postId, string sourceId, string sharedType)
         {
-            return View();
+            var viewModel = new AddCommentViewModel()
+            {
+                PostId = postId,
+                SourceId = sourceId,
+                SharedType = sharedType,
+                Comment = new Comment()
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddComment(string postId, string circleId, [Bind("Text")] Comment comment)
+        public IActionResult AddComment(string postId, string sourceId, string sharedType, [Bind("Text")] Comment comment)
         {
-            _repo.AddComment(postId, comment, circleId);
-            return RedirectToAction("ShowCircle",new{id = circleId});
+            _repo.AddComment(postId, comment, sourceId, sharedType, GetCurrentUser());
+            return RedirectToAction("ShowFeed");                                                                                                       
         }
 
         public IActionResult BlockUser(string id)

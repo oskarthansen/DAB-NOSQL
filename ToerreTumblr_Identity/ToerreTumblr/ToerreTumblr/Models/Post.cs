@@ -9,9 +9,10 @@ namespace ToerreTumblr.Models
 {
     public class Post
     {
+
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        //[BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId Id { get; set; }
 
         [BsonElement("Text")]
         public string Text { get; set; }
