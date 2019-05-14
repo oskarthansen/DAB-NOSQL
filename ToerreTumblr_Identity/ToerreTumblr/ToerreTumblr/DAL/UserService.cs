@@ -108,7 +108,12 @@ namespace ToerreTumblr.DAL
             
 
             List<Post> WallPosts = new List<Post>();
-            WallPosts.AddRange(user.Posts);
+
+            if (user.Posts!=null)
+            {
+                WallPosts.AddRange(user.Posts);
+            }
+            
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
 
