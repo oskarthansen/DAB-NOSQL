@@ -189,10 +189,6 @@ namespace ToerreTumblr.DAL
             return _users.Find<User>(u => u.Login == Login && u.Password == password).FirstOrDefault();
         }
 
-        public User UserExistInDb(string username)
-        {
-            return null;
-        }
 
         public bool Login(User user)
         {
@@ -242,5 +238,13 @@ namespace ToerreTumblr.DAL
         {
             return _service.GetCircle(id);
         }
+
+        public List<User> GetAllUsers()
+        {
+            var coll = _users.AsQueryable();
+            List<User>e = coll.ToList();
+            return e;
+        }
+
     }
 }
