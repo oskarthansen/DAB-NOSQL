@@ -140,7 +140,7 @@ namespace ToerreTumblr.DAL
                 allPosts = source.Posts;
             }
 
-            var postToComment = allPosts.FirstOrDefault(x => x._id == postId);
+            var postToComment = allPosts.FirstOrDefault(x => x.Id.ToString() == postId);
             if (postToComment != null)
             {
                 if (postToComment.Comments == null)
@@ -179,7 +179,7 @@ namespace ToerreTumblr.DAL
             User user = _users.Find(u => u.Id == userId).FirstOrDefault();
             if (user.Posts != null)
             {
-                Post post = user.Posts.FirstOrDefault(p => p.Id == postId);
+                Post post = user.Posts.FirstOrDefault(p => p.Id.ToString() == postId);
                 if (post == null)
                 {
                     return null;
