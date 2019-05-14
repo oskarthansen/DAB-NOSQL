@@ -29,6 +29,7 @@ namespace ToerreTumblr.Controllers
         public async Task<IActionResult> ShowFeed()
         {
             List<Post> feed = _repo.GetFeed(GetCurrentUser());
+            ViewData["CurrentUser"] = GetCurrentUser();
             return View(feed);
         }
 
@@ -60,26 +61,9 @@ namespace ToerreTumblr.Controllers
             return RedirectToAction("ShowFeed");
         }
 
-        //public IActionResult AddPost(string circleId)
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult AddPost(string circleId, [Bind("Text")] Post post)
-        //{
-        //    post.CreationTime = DateTime.Now;
-        //    post.Author = GetCurrentUser();
-        //    post.AuthorName = _repo.GetUser(post.Author).Name;
-        //    _repo.AddPost(post.Author, post,circleId);
-
-        //    return RedirectToAction("ShowCircle",new {id = circleId});
-        //}
-
         public async Task<IActionResult> ShowWall(string id)
         {
-            var wallPosts = _repo.GetWall(id, HttpContext.Session.GetString("_CurrentUserId"));
+            var wallPosts = _repo.GetWall(id, GetCurrentUser());
 
             if (wallPosts!=null)
             {
@@ -95,11 +79,6 @@ namespace ToerreTumblr.Controllers
             return NotFound();
         }
 
-        public IActionResult AddPublicComment(string id)
-        {
-            return View();
-        }
-
         public IActionResult GetUsers()
         {
             var users = _repo.GetUsers();
@@ -111,15 +90,6 @@ namespace ToerreTumblr.Controllers
         {
             return _repo.GetUserNames();
         }
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
-        //{
-        //    _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("_CurrentUserId"));
-        //    return RedirectToAction("ShowFeed");
-        //}
 
         public IActionResult AddComment(string postId, string sourceId, string sharedType)
         {
@@ -166,7 +136,33 @@ namespace ToerreTumblr.Controllers
             Circle circle = _repo.GetCircle(id);
             return View(circle);
         }
-        
 
+        public IActionResult EditPost(string postId, string sourceId, string type)
+        {
+            var post = _repo.GetPost(postId, sourceId, type);
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPost([Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
+        {
+            _repo.EditPost(post);
+            return RedirectToAction("ShowFeed");
+        }
+
+        public IActionResult DeletePost(string postId, string sourceId, string type)
+        {
+            var post = _repo.GetPost(postId, sourceId, type);
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost([Bind("Id, Author, AuthorName, CreationTime, SharedType, SourceId, Text, Image")]Post post)
+        {
+            _repo.DeletePost(post);
+            return RedirectToAction("ShowFeed");
+        }
     }
 }

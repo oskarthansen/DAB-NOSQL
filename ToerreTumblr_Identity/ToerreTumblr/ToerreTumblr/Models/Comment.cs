@@ -10,7 +10,7 @@ namespace ToerreTumblr.Models
     public class Comment
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("AuthorId")]
         public string AuthorId { get; set; }
