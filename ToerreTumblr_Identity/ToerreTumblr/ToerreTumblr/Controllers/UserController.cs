@@ -88,7 +88,7 @@ namespace ToerreTumblr.Controllers
         [HttpGet]
         public List<User> GetUsersJson()
         {
-            return _repo.GetUsers();
+            return _repo.GetUserNames();
         }
 
         public IActionResult AddComment(string postId, string sourceId, string sharedType)

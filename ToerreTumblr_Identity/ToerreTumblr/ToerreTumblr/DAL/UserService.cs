@@ -108,7 +108,12 @@ namespace ToerreTumblr.DAL
             
 
             List<Post> WallPosts = new List<Post>();
-            WallPosts.AddRange(user.Posts);
+
+            if (user.Posts!=null)
+            {
+                WallPosts.AddRange(user.Posts);
+            }
+            
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
 
@@ -323,6 +328,8 @@ namespace ToerreTumblr.DAL
         public void EditPost(Post post)
         {
             var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
+            var oldPost = GetPost(post.Id, post.SourceId, post.SharedType);
+            post.Comments = oldPost.Comments;
 
             var postIndex = postList.FindIndex(x => x.Id == post.Id);
             postList[postIndex] = post;
@@ -362,6 +369,16 @@ namespace ToerreTumblr.DAL
                 _service.Update(post.SourceId, circle);
             }
         }
+			
+		public List<User> GetUserNames()
+        {
+            var userNames = _users.AsQueryable()
+                .Where(e => e.Name.Length > 0)
+                .Select(e => e)
+                .ToList();
+
+            return userNames;
+		}			
 
         public void FollowUser(string currentUserId, string userToFollowId)
         {
@@ -405,5 +422,6 @@ namespace ToerreTumblr.DAL
             Update(currentUserId,currentUser);
             Update(userToFollowId,UserToFollow);
         }
+
     }
 }
