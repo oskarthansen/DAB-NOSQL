@@ -7,6 +7,17 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+#myUL {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px 3px;
+    position: absolute;
+    border: 1px solid #e5e5e5;
+    background: white;
+    border-radius: 4px;
+    width: 29.6vw;
+    z-index: 99999;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

@@ -317,6 +317,17 @@ namespace ToerreTumblr.DAL
             return _users.Find(user => true).ToList();
         }
 
+        public List<User> GetUserNames()
+        {
+            var userNames = _users.AsQueryable()
+                .Where(e => e.Name.Length > 0)
+                .Select(e => e)
+                .ToList();
+
+            return userNames;
+
+        }
+
 
     }
 }

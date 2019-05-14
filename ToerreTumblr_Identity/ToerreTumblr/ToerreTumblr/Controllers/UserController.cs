@@ -109,17 +109,17 @@ namespace ToerreTumblr.Controllers
         [HttpGet]
         public List<User> GetUsersJson()
         {
-            return _repo.GetUsers();
+            return _repo.GetUserNames();
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
-        {
-            _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("_CurrentUserId"));
-            return RedirectToAction("ShowFeed");
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult AddPublicComment(string id, [Bind("Text")] Comment comment)
+        //{
+        //    _repo.AddPublicComment(id,comment,HttpContext.Session.GetString("_CurrentUserId"));
+        //    return RedirectToAction("ShowFeed");
+        //}
 
         public IActionResult AddComment(string postId, string sourceId, string sharedType)
         {
