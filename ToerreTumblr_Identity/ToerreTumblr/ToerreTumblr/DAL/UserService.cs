@@ -323,6 +323,8 @@ namespace ToerreTumblr.DAL
         public void EditPost(Post post)
         {
             var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
+            var oldPost = GetPost(post.Id, post.SourceId, post.SharedType);
+            post.Comments = oldPost.Comments;
 
             var postIndex = postList.FindIndex(x => x.Id == post.Id);
             postList[postIndex] = post;

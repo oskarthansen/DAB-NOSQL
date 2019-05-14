@@ -98,5 +98,12 @@ namespace ToerreTumblr.DAL
             
         }
 
+        public void EditCircle(Circle circle)
+        {
+            var oldCircle = GetCircle(circle.Id);
+            circle.Posts = oldCircle.Posts;
+            Update(oldCircle.Id, circle);
+        }
+
     }
 }

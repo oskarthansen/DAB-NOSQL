@@ -93,10 +93,28 @@ namespace ToerreTumblr.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Circle circle)
         {
-            _circleService.Update(circle.Id, circle);
+            _circleService.EditCircle(circle);
 
             return RedirectToAction("Circle");
         }
+
+        public IActionResult Delete(string id)
+        {
+            var circle = _circleService.GetCircle(id);
+
+            return View(circle);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Circle circle)
+        {
+            _circleService.Remove(circle.Id);
+
+            return RedirectToAction("Circle");
+        }
+
+
 
     }
 }
