@@ -165,5 +165,13 @@ namespace ToerreTumblr.Controllers
             _repo.DeletePost(post);
             return RedirectToAction("ShowFeed");
         }
+
+        public IActionResult FollowUser(string id)
+        {
+            _repo.FollowUser(GetCurrentUser(), id);
+            return RedirectToAction("ShowWall", new {id = id});
+        }
+        
+
     }
 }

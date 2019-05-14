@@ -58,15 +58,23 @@ namespace ToerreTumblr.DAL
         {
             var following = GetFollowing(userId);
 
-            // Find alle posts for dem der føles
+            // Find alle posts for dem der følges
             List<Post> posts = new List<Post>();
             foreach (var user in following)
             {
-                if (user.Posts != null)
+                if (user.Posts != null )
                 {
-                    posts.AddRange(user.Posts.ToList());
+                    if (user.Blocked == null)
+                    {
+                        posts.AddRange(user.Posts.ToList());
+                    }
+                    else
+                    {
+                        if(!user.Blocked.Contains(userId))
+                            posts.AddRange(user.Posts.ToList());
+                    }
+                    
                 }
-                
             }
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
@@ -108,7 +116,12 @@ namespace ToerreTumblr.DAL
             
 
             List<Post> WallPosts = new List<Post>();
-            WallPosts.AddRange(user.Posts);
+
+            if (user.Posts!=null)
+            {
+                WallPosts.AddRange(user.Posts);
+            }
+            
 
             List<Circle> circles = _service.GetCirclesForUser(userId);
 
@@ -287,9 +300,24 @@ namespace ToerreTumblr.DAL
         public void BlockUser(string UserToBlock, string UserId)
         {
             var user = GetUser(UserId);
-
-            user.Blocked.Append(UserToBlock);
-
+            if (user.Blocked == null)
+            {
+                user.Blocked = new string[]
+                {
+                    UserToBlock
+                };
+            }
+            else
+            {
+                if (!user.Blocked.Contains(UserToBlock))
+                {
+                    string[] newBlocked = new string[user.Blocked.Length + 1];
+                    Array.Copy(user.Blocked, newBlocked, user.Blocked.Length);
+                    newBlocked[user.Blocked.Length] = UserToBlock;
+                    user.Blocked = newBlocked;
+                }
+            }
+            Update(UserId,user);
         }
 
         public Circle GetCircle(string id)
@@ -323,6 +351,8 @@ namespace ToerreTumblr.DAL
         public void EditPost(Post post)
         {
             var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
+            var oldPost = GetPost(post.Id, post.SourceId, post.SharedType);
+            post.Comments = oldPost.Comments;
 
             var postIndex = postList.FindIndex(x => x.Id == post.Id);
             postList[postIndex] = post;
@@ -371,7 +401,56 @@ namespace ToerreTumblr.DAL
                 .ToList();
 
             return userNames;
+		}			
 
+        public void FollowUser(string currentUserId, string userToFollowId)
+        {
+            var currentUser = _users.Find(u => u.Id == currentUserId).FirstOrDefault();
+            var UserToFollow = _users.Find(u => u.Id == userToFollowId).FirstOrDefault();
+            if (currentUser == null | UserToFollow == null)
+            {
+                return;
+            }
+            //Update current user
+            if (currentUser.Following == null)
+            {
+                currentUser.Following = new string[]
+                {
+                    userToFollowId
+                };
+            }
+            else
+            {
+                if (!currentUser.Following.Contains(userToFollowId))
+                {
+                    string[] newFollowing = new string[currentUser.Following.Length + 1];
+                    Array.Copy(currentUser.Following, newFollowing, currentUser.Following.Length);
+                    newFollowing[currentUser.Following.Length] = userToFollowId;
+                    currentUser.Following = newFollowing;
+                }
+                
+            }
+
+            //Add user to followers list of userToFollow
+            if (UserToFollow.Followers == null)
+            {
+                UserToFollow.Followers = new string[]
+                {
+                    userToFollowId
+                };
+            }
+            else
+            {
+                if (!UserToFollow.Followers.Contains(currentUserId))
+                {
+                    string[] newFollowers = new string[UserToFollow.Followers.Length + 1];
+                    Array.Copy(UserToFollow.Followers, newFollowers, UserToFollow.Followers.Length);
+                    newFollowers[UserToFollow.Followers.Length] = currentUserId;
+                    UserToFollow.Followers = newFollowers;
+                }
+            }
+            Update(currentUserId,currentUser);
+            Update(userToFollowId,UserToFollow);
         }
 
     }
