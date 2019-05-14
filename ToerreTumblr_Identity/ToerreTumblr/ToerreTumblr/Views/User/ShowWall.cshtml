@@ -16,7 +16,7 @@
         <p>By: @Model.Posts[i].Author</p>
         <p>Created: @Model.Posts[i].CreationTime.ToString("f")</p>
         <div class="post-comments">
-            @for (int j = 0; i < Model.Posts[i].Comments.Length; ++j)
+            @for (int j = 0; j < Model.Posts[i].Comments.Length; ++j)
             {
                 <a asp-action="ShowWall" asp-route-id="@Model.Posts[i].Comments[j].Id">@Model.Posts[i].Comments[j].Author:</a>
                 <p>@Model.Posts[i].Comments[j].Text</p>

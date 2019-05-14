@@ -149,6 +149,7 @@ namespace ToerreTumblr.DAL
                 }
                 var commentsList = postToComment.Comments.ToList();
                 newComment.Author = usr.Name;
+                newComment.AuthorId = usr.Id;
                 commentsList.Add(newComment);
                 postToComment.Comments = commentsList.ToArray();
             }

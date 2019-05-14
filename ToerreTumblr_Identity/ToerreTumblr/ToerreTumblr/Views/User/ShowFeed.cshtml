@@ -25,7 +25,7 @@
             {
                 for (int j = 0; j < Model[i].Comments.Length; ++j)
                 {
-                    <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].Id">@Model[i].Comments[j].Author:</a>
+                    <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].AuthorId">@Model[i].Comments[j].Author:</a>
                     <p>@Model[i].Comments[j].Text</p>
                     <hr />
                 }
