@@ -8,7 +8,11 @@
 
 <div>
     <h4>Users</h4>
-
+    @foreach (var user in Model)
+    {
+        <p>@user.Name</p>
+        <p>@user.Id</p>
+    }
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |

@@ -149,6 +149,7 @@ namespace ToerreTumblr.DAL
                 }
                 var commentsList = postToComment.Comments.ToList();
                 newComment.Author = usr.Name;
+                newComment.Id = ObjectId.GenerateNewId(DateTime.Now);
                 commentsList.Add(newComment);
                 postToComment.Comments = commentsList.ToArray();
             }
@@ -170,7 +171,6 @@ namespace ToerreTumblr.DAL
                 source.Posts = allPosts;
                 Update(sourceId, source); ;
             }
-            newComment.Id = ObjectId.GenerateNewId(DateTime.Now);
             return newComment;
         }
 
