@@ -149,6 +149,7 @@ namespace ToerreTumblr.DAL
         public Post AddPost(string userId, Post post)
         {
             post.CreationTime = DateTime.Now;
+            post.SharedType = "Public";
             var usr = GetUser(userId);
             post.AuthorName = usr.Login;
             if (usr.Posts == null)

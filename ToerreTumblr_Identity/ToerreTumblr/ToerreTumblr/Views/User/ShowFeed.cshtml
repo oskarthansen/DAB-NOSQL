@@ -9,25 +9,30 @@
     <h2>My feed</h2>
     @for (int i = 0; i < Model.Count; ++i)
     {
-        <div class="feed-post">
-            <p>@Model[i].Text</p>
+    <div class="feed-post">
+        <p>@Model[i].Text</p>
+        @if (Model[i].Image != null)
+        {
             <img src="~/Images/@Model[i].Image" />
-            <p>By: @Model[i].Author</p>
-            <p>Created: @Model[i].CreationTime.ToString("f")</p>
-            <a asp-action="AddComment" asp-route-id="@Model[i].Id">Add a comment</a>
-            <div class="post-comments">
-                @if (Model[i].Comments != null)
+        }
+
+        <p>By: @Model[i].AuthorName</p>
+        <p>From: @Model[i].SharedType</p>
+        <p>Created: @Model[i].CreationTime.ToString("f")</p>
+        <a asp-action="AddComment" asp-route-id="@Model[i].Id">Add a comment</a>
+        <div class="post-comments">
+            @if (Model[i].Comments != null)
+            {
+                for (int j = 0; i < Model[i].Comments.Length; ++j)
                 {
-                    for (int j = 0; i < Model[i].Comments.Length; ++j)
-                    {
-                        <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].Id">@Model[i].Comments[j].Author:</a>
-                        <p>@Model[i].Comments[j].Text</p>
-                        <hr />
-                    }
+                    <a asp-action="ShowWall" asp-route-id="@Model[i].Comments[j].Id">@Model[i].Comments[j].Author:</a>
+                    <p>@Model[i].Comments[j].Text</p>
+                    <hr />
                 }
-                
-            </div>
+            }
+
         </div>
+    </div>
         <hr />
     }
     <a asp-action="AddPublicPost">Add a public post</a>

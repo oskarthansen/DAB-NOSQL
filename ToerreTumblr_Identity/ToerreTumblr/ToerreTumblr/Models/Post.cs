@@ -31,6 +31,9 @@ namespace ToerreTumblr.Models
         [BsonElement("Comments")]
         public Comment[] Comments { get; set; }
 
+        [BsonElement("SharedType")]
+        public string SharedType { get; set; }
+
 
     }
 }
