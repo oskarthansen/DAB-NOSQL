@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -105,5 +106,12 @@ namespace ToerreTumblr.DAL
             Update(oldCircle.Id, circle);
         }
 
+        public List<string> GetUsersForCircle(string id)
+        {
+            var userLogins = _circles.AsQueryable().Where(e => e.Id == id).SelectMany(e=>e.UserIds).ToList();
+
+            return userLogins;
+            
+        }
     }
 }

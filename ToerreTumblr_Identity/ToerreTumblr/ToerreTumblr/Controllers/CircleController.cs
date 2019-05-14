@@ -43,7 +43,8 @@ namespace ToerreTumblr.Controllers
 
             CircleViewModel vm = new CircleViewModel()
             {
-                Users = _userService.GetUserNames()
+                Users = _userService.GetUserNames(),
+                UsersLogin = _userService.GetUserLogins()
             };
             
 
@@ -91,12 +92,23 @@ namespace ToerreTumblr.Controllers
         {
             MembersViewModel vm = new MembersViewModel()
             {
-                users = new List<string>()
+                Users = new List<helpclass>()
             };
+            
+            List<string> placeholder = new List<string>();
+            placeholder = _circleService.GetUsersForCircle(id);
+            
+            foreach (var userId in placeholder)
+            {
+                vm.Users.Add(new helpclass()
+                {
+                    users = _userService.GetUserName(userId),
+                    usersId = userId
+                });
+            }
+            
 
-            //find users for a specific 
-
-            return View();
+            return View(vm); 
         }
 
         public IActionResult Edit(string id)

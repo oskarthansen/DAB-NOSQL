@@ -265,6 +265,11 @@ namespace ToerreTumblr.DAL
             return null;
         }
 
+        public string GetUserName(string id)
+        {
+            return _users.Find(u => u.Id == id).FirstOrDefault().Name;
+        }
+
         public bool Login(User user)
         {
             
@@ -414,7 +419,15 @@ namespace ToerreTumblr.DAL
                 .ToList();
 
             return userNames;
-		}			
+		}
+
+        public List<string> GetUserLogins()
+        {
+            var userLogins = _users.AsQueryable().Where(e => e.Login.Length > 0).Select(e=>e.Login).ToList();
+
+            return userLogins;
+
+        }
 
         public void FollowUser(string currentUserId, string userToFollowId)
         {

@@ -40,11 +40,18 @@
 
         </form>
     </div>
-    <div class="col-md-8">
-        <h4>Users:</h4>
+    <div class="col-md-4">
+        <h4>Users Names:</h4>
         @foreach (var username in Model.Users)
         {
             <p>@username</p>
+        }
+    </div>
+    <div class="col-md-4">
+        <h4>User Login</h4>
+        @foreach (var userLogin in Model.UsersLogin)
+        {
+            <p>@userLogin</p>
         }
     </div>
 </div>

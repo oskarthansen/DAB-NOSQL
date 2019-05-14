@@ -1,4 +1,5 @@
-﻿
+﻿@model ToerreTumblr.ViewModels.MembersViewModel
+
 @{
     ViewData["Title"] = "Members";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,3 +7,30 @@
 
 <h1>Members</h1>
 
+<table class="table col-md-6" style="position: center">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    <a asp-action="ShowWall" asp-controller="User" asp-route-id="@item.usersId">@item.users</a>
+                </td>
+                
+            </tr>
+        }
+
+
+        </tbody>
+
+    </table>
+
+<a asp-action="Circle" asp-controller="Circle">Back to circles overview!</a>
