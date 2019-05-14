@@ -90,8 +90,6 @@ namespace ToerreTumblr.DAL
                 .ThenBy(x=>x.CreationTime.Date)
                 .ThenBy(x=>x.CreationTime.Year).Reverse().ToList();
 
-
-
             return sortedPosts;
         }
 
@@ -101,8 +99,13 @@ namespace ToerreTumblr.DAL
             // Seneste posts, hvis ikke bruger er blokeret 
             // Hvis brugere er i samme cirkel kan posts også se tiknyttede posts
             var user = GetUser(userId);
-            if (user.Blocked.Contains(guestId))
-                return null;
+
+            if (user.Blocked!=null)
+            {
+                if (user.Blocked.Contains(guestId))
+                    return null;
+            }
+            
 
             List<Post> WallPosts = new List<Post>();
             WallPosts.AddRange(user.Posts);
@@ -114,8 +117,12 @@ namespace ToerreTumblr.DAL
                 if(circle.UserIds.Contains(guestId))
                     WallPosts.AddRange(circle.Posts.Where(x=>x.Author==userId).ToList());
             }
-            
-            return WallPosts;
+
+            var sortedPosts = WallPosts.OrderBy(x => x.CreationTime.TimeOfDay)
+                .ThenBy(x => x.CreationTime.Date)
+                .ThenBy(x => x.CreationTime.Year).Reverse().ToList();
+
+            return sortedPosts;
 
         }
 
@@ -227,12 +234,6 @@ namespace ToerreTumblr.DAL
             // Hvis ikke det virker så kald update () 
         }
 
-        public Post AddPost(string userId, Post post, string circleId)
-        {
-
-            return post;
-        }
-
         public User GetUser(string id)
         {
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
@@ -272,12 +273,6 @@ namespace ToerreTumblr.DAL
             return user;
         }
 
-        //public Post InsertPost(Post post)
-        //{
-        //    _users.InsertOne(post);
-        //    return post;
-        //}
-
         public void Update(string id, User userIn)
         {
             _users.ReplaceOne(user => user.Id == id, userIn);
@@ -310,13 +305,40 @@ namespace ToerreTumblr.DAL
             return false;
         }
 
-        
-
         public List<User> GetUsers()
         {
             return _users.Find(user => true).ToList();
         }
 
+        public Post GetPost(string postId, string sourceId, string type)
+        {
+            var postList = type=="Public" ? GetUser(sourceId).Posts.ToList() : GetCircle(sourceId).Posts.ToList();
 
+            var post = postList.FirstOrDefault(x => x.Id.ToString() == postId);
+
+            return post;
+        }
+
+        public void EditPost(Post post)
+        {
+            var postList = post.SharedType == "Public" ? GetUser(post.SourceId).Posts.ToList() : GetCircle(post.SourceId).Posts.ToList();
+
+            var postIndex = postList.FindIndex(x => x.Id == post.Id);
+            postList[postIndex] = post;
+
+            if (post.SharedType=="Public")
+            {
+                var usr = GetUser(post.SourceId);
+                usr.Posts = postList.ToArray();
+                Update(post.Author, usr);
+            }
+
+            else
+            {
+                var circle = GetCircle(post.SourceId);
+                circle.Posts = postList.ToArray();
+                _service.Update(post.SourceId, circle);
+            }
+        }
     }
 }

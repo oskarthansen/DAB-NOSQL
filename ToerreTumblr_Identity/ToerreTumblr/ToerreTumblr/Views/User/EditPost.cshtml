@@ -1,0 +1,43 @@
+﻿@model ToerreTumblr.Models.Post
+
+@{
+    ViewData["Title"] = "EditPost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>EditPost</h1>
+
+<h4>Post</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditPost">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <input asp-for="@Model.Id" />
+            <input type="hidden" asp-for="Author" />
+            <input type="hidden" asp-for="AuthorName" />
+            <input type="hidden" asp-for="CreationTime" />
+            <input type="hidden" asp-for="SharedType" />
+            <input type="hidden" asp-for="SourceId" />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
