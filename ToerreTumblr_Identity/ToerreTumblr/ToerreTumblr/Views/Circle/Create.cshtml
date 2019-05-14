@@ -23,19 +23,15 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-
-                <label class="control-label">Circle members (comma seperate)</label>
-
                 
-                <div class="row">
-                    <div class="col-10">
-                        <input asp-for="Users" class="form-control" value=""/>
-                        <span asp-validation-for="Users" class="text-danger"></span>
-                    </div>
-                    <div class="col-1">
-                        <span>Add</span>
-                    </div>
+                
+                <label class="control-label">Circle members</label>
+                <span id="add" style="float: right; color: #007bff; cursor: pointer;"><p onclick="AddInputField()">Add new</p></span>
+                <div id="inputElements">
+                    <input asp-for="Users" class="form-control inputForm" value=""/>
                 </div>
+                <span asp-validation-for="Users" class="text-danger"></span>
+
 
             </div>
             <div class="form-group">

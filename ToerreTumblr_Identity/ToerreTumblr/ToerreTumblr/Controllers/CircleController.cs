@@ -58,8 +58,10 @@ namespace ToerreTumblr.Controllers
             var usr = _userService.GetUser(id);
             if (usr != null)
             {
-
+                return null;
             }
+
+            return null;
         }
 
 

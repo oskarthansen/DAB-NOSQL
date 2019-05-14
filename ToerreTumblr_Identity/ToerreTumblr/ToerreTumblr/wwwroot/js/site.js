@@ -7,9 +7,16 @@ var toggleMenu = false;
 
 $(document.body).click(function () {
     deleteItems();
-
 });
 
+var num = 2;
+document.getElementById('add').addEventListener("click", addInput);
+
+function addInput() {
+    var demo = document.getElementById('inputElements');
+    demo.insertAdjacentHTML('beforeend', '<input asp-for="Users" class="form-control inputForm" value=""/>');
+    num++;
+}
 
 $('#myInput').click(function (e) {
     e.stopPropagation();

@@ -7,6 +7,10 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.inputForm {
+    margin-bottom: 15px !important;
+}
+
 #myUL {
     list-style-type: none;
     margin: 0;
@@ -16,7 +20,6 @@ a.navbar-brand {
     background: white;
     border-radius: 4px;
     width: 29.6vw;
-    z-index: 99999;
 }
 /* Sticky footer styles
 -------------------------------------------------- */
