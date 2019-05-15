@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -22,6 +23,9 @@ namespace ToerreTumblr.DAL
             _users = database.GetCollection<User>("Users");
             _service = new CircleService(config);
         }
+
+
+
 
 
         // Skal måske laves om til at hpndtere array i stedet
@@ -136,6 +140,7 @@ namespace ToerreTumblr.DAL
             return sortedPosts;
 
         }
+
 
         public List<User> GetBlocked(string userId)
         {
@@ -297,6 +302,28 @@ namespace ToerreTumblr.DAL
         public void Remove(User userIn)
         {
             _users.DeleteOne(user => user.Id == userIn.Id);
+        }
+
+
+        public bool IsFollowing(string userId, string guestUser)
+        {
+            var user = GetUser(userId);
+            return user.Following.Contains(guestUser);
+
+        }
+        public void UnfollowUser(string userToUnfollow, string Userid)
+        {
+            var user = GetUser(Userid);
+
+            if (user.Following != null && user.Following.Contains(userToUnfollow))
+            {
+                List<string> following = user.Following.ToList();
+                following.Remove(userToUnfollow);
+                user.Following = following.ToArray();
+                Update(Userid, user);
+            }
+
+
         }
 
         public void BlockUser(string userToBlock, string UserId)

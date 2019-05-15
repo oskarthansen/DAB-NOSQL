@@ -65,12 +65,16 @@ namespace ToerreTumblr.Controllers
         {
             var wallPosts = _repo.GetWall(id, GetCurrentUser());
 
+            var following = _repo.IsFollowing(GetCurrentUser(), id);
+
+
             if (wallPosts!=null)
             {
                 var viewModel = new ShowWallViewModel()
                 {
                     Posts = wallPosts,
-                    User = _repo.GetUser(id)
+                    User = _repo.GetUser(id),
+                    isFollowing = following
                 };
 
                 return View(viewModel);
@@ -166,10 +170,18 @@ namespace ToerreTumblr.Controllers
             return RedirectToAction("ShowFeed");
         }
 
+
+        public IActionResult UnfollowUser(string id)
+        {
+            _repo.UnfollowUser(id, GetCurrentUser());
+            return RedirectToAction("ShowWall", new { id = id });
+        }
+
+
         public IActionResult FollowUser(string id)
         {
             _repo.FollowUser(GetCurrentUser(), id);
-            return RedirectToAction("ShowWall", new {id = id});
+            return RedirectToAction("ShowWall", new {id = id });
         }
 
         public IActionResult EditComment(string commentId, string postId, string sourceId, string type)
