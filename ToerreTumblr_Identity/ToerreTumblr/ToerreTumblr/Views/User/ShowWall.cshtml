@@ -7,17 +7,26 @@
 }
 <link type="text/css" href="css/site.css" />
 <h2>@Model.User.Name's Wall</h2>
-
-@if (Model.isFollowing)
-{
-    <p><a asp-action="UnfollowUser" asp-route-id="@Model.User.Id">Unfollow</a> | <a asp-action="BlockUser" asp-route-id="@Model.User.Id">Block</a></p>
-
-}
-else
-{
-    <p><a asp-action="FollowUser" asp-route-id="@Model.User.Id">Follow</a> | <a asp-action="BlockUser" asp-route-id="@Model.User.Id">Block</a></p>
-
-}
+<p>
+    @if (Model.isFollowing)
+    {
+        <a asp-action="UnfollowUser" asp-route-id="@Model.User.Id">Unfollow</a>
+        @:|
+    }
+    else
+    {
+        <a asp-action="FollowUser" asp-route-id="@Model.User.Id">Follow</a>
+        @:|
+    }
+    @if (Model.isBlocked)
+    {
+        <a asp-action="UnblockUser" asp-route-id="@Model.User.Id">Unblock</a>
+    }
+    else
+    {
+        <a asp-action="BlockUser" asp-route-id="@Model.User.Id">Block</a>
+    }
+</p>
 
 <h3>Posts</h3>
 

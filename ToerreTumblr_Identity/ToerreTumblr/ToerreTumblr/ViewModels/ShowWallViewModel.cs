@@ -11,5 +11,7 @@ namespace ToerreTumblr.ViewModels
         public List<Post> Posts { get; set; }
         public User User { get; set; }
         public Boolean isFollowing { get; set; }
+
+        public bool isBlocked { get; set; }
     }
 }

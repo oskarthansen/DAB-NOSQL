@@ -1,4 +1,5 @@
-﻿@model List<User>
+﻿@using Microsoft.AspNetCore.Http
+@model List<User>
 
 @{
     ViewData["Title"] = "GetUsers";
@@ -11,9 +12,29 @@
     @foreach (var user in Model)
     {
         <p>@user.Name</p>
-        <a asp-action="FollowUser" asp-route-id="@user.Id">Follow</a> @:|
-        <a asp-action="BlockUser" asp-route-id="@user.Id">Block</a> 
-        <p>@user.Id</p>
+        User currentUser = (User)ViewData["CurrentUser"];
+        if (currentUser.Id != user.Id)
+        {
+            if (currentUser.Following.Contains(user.Id))
+            {
+                <a asp-action="UnfollowUser" asp-route-id="@user.Id">Unfollow</a> @:|
+            }
+            else
+            {
+                <a asp-action="FollowUser" asp-route-id="@user.Id">Follow</a> @:|
+            }
+            if (currentUser.Blocked.Contains(user.Id))
+            {
+                <a asp-action="UnblockUser" asp-route-id="@user.Id">Unblock</a>
+            }
+            else
+            {
+                <a asp-action="BlockUser" asp-route-id="@user.Id">Block</a>
+            }
+
+        }
+        <hr />
+
     }
-    
+
 </div>
