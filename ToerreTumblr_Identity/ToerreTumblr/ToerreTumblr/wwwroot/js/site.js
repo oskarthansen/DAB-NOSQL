@@ -3,39 +3,34 @@
 
 // Write your JavaScript code.
 
-var toggleMenu = false;
-
-$(document.body).click(function () {
+$(document).click(function (event) {
     deleteItems();
 });
 
-var num = 2;
-document.getElementById('add').addEventListener("click", addInput);
+var toggleMenu = false;
 
-function addInput() {
-    var demo = document.getElementById('inputElements');
-    demo.insertAdjacentHTML('beforeend', '<input asp-for="Users" class="form-control inputForm" value=""/>');
-    num++;
-}
 
 $('#myInput').click(function (e) {
     e.stopPropagation();
     if (!toggleMenu) {
-
-        var url = "/User/GetUsersJson";
-        $.get(url, function (users) {
-            users.forEach(function (username) {
-                var li = document.createElement("LI");
-                var a = document.createElement('a');
-                a.href = "/User/ShowWall/" + username.id;
-                var linkText = document.createTextNode(username.name);
-                a.appendChild(linkText);
-                li.append(a);
-                document.getElementById("myUL").appendChild(li);
-            });
-        });
         $("#myUL").show();
+        var url = "/User/GetUsersJson";
+
+        $.get(url,
+            function(users) {
+                users.forEach(function(username) {
+                    var li = document.createElement("LI");
+                    var a = document.createElement('a');
+                    a.href = "/User/ShowWall/" + username.id;
+                    var linkText = document.createTextNode(username.name);
+                    a.appendChild(linkText);
+                    li.append(a);
+                    document.getElementById("myUL").appendChild(li);
+                });
+            });
         toggleMenu = true;
+    } else {
+        deleteItems();
     }
 });
 
@@ -65,3 +60,11 @@ function deleteItems() {
     toggleMenu = false;
 }
 
+var num = 2;
+document.getElementById('add').addEventListener("click", addInput);
+
+function addInput() {
+    var demo = document.getElementById('inputElements');
+    demo.insertAdjacentHTML('beforeend', '<input asp-for="Users" class="form-control inputForm" value=""/>');
+    num++;
+}

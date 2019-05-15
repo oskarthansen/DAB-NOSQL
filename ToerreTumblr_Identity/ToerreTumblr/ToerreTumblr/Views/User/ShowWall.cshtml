@@ -12,27 +12,34 @@
 
 @for (int i = 0; i < Model.Posts.Count; ++i)
 {
-<div class="feed-post">
-    <p>@Model.Posts[i].Text</p>
-    @if (Model.Posts[i].Image != null)
-    {
-        <img src="~/Images/@Model.Posts[i].Image"/>
-    }
-    <p>By: @Model.Posts[i].AuthorName</p>
-    <p>Created: @Model.Posts[i].CreationTime.ToString("f")</p>
-    <p>Shared with: @Model.Posts[i].SharedType</p>
-    <a asp-action="AddComment" asp-route-postId="@Model.Posts[i].Id" asp-route-sourceId="@Model.Posts[i].SourceId" asp-route-sharedType="@Model.Posts[i].SharedType">Add a comment</a>
-    <div class="post-comments">
-        <h5>Comments:</h5>
-        @if (Model.Posts[i].Comments != null)
-        {
-            for (int j = 0; j < Model.Posts[i].Comments.Length; ++j)
-            {
-                <a asp-action="ShowWall" asp-route-id="@Model.Posts[i].Comments[j].AuthorId">@Model.Posts[i].Comments[j].Author:</a>
-                <p>@Model.Posts[i].Comments[j].Text</p>
-            }
-        }
+    <div class="feed-post">
+    <div class="wall-post">
+        <h4 style="margin: 0;">By: @Model.Posts[i].AuthorName</h4>
+        <p style="margin: 0;">Shared with: @Model.Posts[i].SharedType</p>
     </div>
-</div>
+
+        <p>@Model.Posts[i].Text</p>
+        @if (Model.Posts[i].Image != null)
+        {
+            <img src="~/Images/@Model.Posts[i].Image"/>
+        }
+
+        <p>Created: @Model.Posts[i].CreationTime.ToString("f")</p>
+        
+        <a asp-action="AddComment" asp-route-postId="@Model.Posts[i].Id" asp-route-sourceId="@Model.Posts[i].SourceId" asp-route-sharedType="@Model.Posts[i].SharedType">Add a comment</a>
+        <div class="post-comments">
+            <h5>Comments:</h5>
+            @if (Model.Posts[i].Comments != null)
+            {
+                for (int j = 0; j < Model.Posts[i].Comments.Length; ++j)
+                {
+                    <div class="post-comment">
+                        <a asp-action="ShowWall" asp-route-id="@Model.Posts[i].Comments[j].AuthorId">@Model.Posts[i].Comments[j].Author:</a>
+                        <p style="margin: 0;">@Model.Posts[i].Comments[j].Text</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
     <hr />
 }
