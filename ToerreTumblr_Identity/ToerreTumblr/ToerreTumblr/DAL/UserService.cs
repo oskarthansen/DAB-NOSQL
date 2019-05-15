@@ -74,8 +74,11 @@ namespace ToerreTumblr.DAL
                     }
                     else
                     {
-                        if(!user.Blocked.Contains(userId))
-                            posts.AddRange(user.Posts.ToList());
+                        if (!user.Blocked.Contains(userId))
+                        {
+                            if(!currentUser.Blocked.Contains(user.Id))
+                                posts.AddRange(user.Posts.ToList());
+                        }
                     }
                 }
             }
@@ -323,7 +326,6 @@ namespace ToerreTumblr.DAL
                 Update(Userid, user);
             }
 
-
         }
 
         public void BlockUser(string userToBlock, string UserId)
@@ -345,16 +347,6 @@ namespace ToerreTumblr.DAL
                     Array.Copy(user.Blocked, newBlocked, user.Blocked.Length);
                     newBlocked[user.Blocked.Length] = userToBlock;
                     user.Blocked = newBlocked;
-                }
-            }
-
-            if (user.Following != null)
-            {
-                if (user.Following.Contains(userToBlock))
-                {
-                    List<string> newFollowing = user.Following.ToList();
-                    newFollowing.Remove(userToBlock);
-                    user.Following = newFollowing.ToArray();
                 }
             }
 
@@ -488,16 +480,6 @@ namespace ToerreTumblr.DAL
                 }
             }
 
-            if (currentUser.Blocked != null)
-            {
-                if (currentUser.Blocked.Contains(userToFollowId))
-                {
-                    List<string> newBlocked = currentUser.Blocked.ToList();
-                    newBlocked.Remove(userToFollowId);
-                    currentUser.Blocked = newBlocked.ToArray();
-                }
-            }
-
             //Add user to followers list of userToFollow
             if (UserToFollow.Followers == null)
             {
@@ -551,5 +533,24 @@ namespace ToerreTumblr.DAL
             EditPost(post, true);
         }
 
+        public void UnblockUser(string userToUnblockId, string currentUserId)
+        {
+            var currentUser = _users.Find(u => u.Id == currentUserId).FirstOrDefault();
+            if (currentUser.Blocked != null && currentUser.Blocked.Contains(userToUnblockId))
+            {
+                List<string> newBlockedUsers = currentUser.Blocked.ToList();
+                newBlockedUsers.Remove(userToUnblockId);
+                currentUser.Blocked = newBlockedUsers.ToArray();
+                Update(currentUserId, currentUser);
+            }
+        }
+
+        public bool IsBlocked(string currentUserId, string id)
+        {
+            var currentUser = GetUser(currentUserId);
+            if (currentUser.Blocked != null && currentUser.Blocked.Contains(id))
+                return true;
+            return false;
+        }
     }
 }

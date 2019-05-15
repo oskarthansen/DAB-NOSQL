@@ -67,6 +67,7 @@ namespace ToerreTumblr.Controllers
 
             var following = _repo.IsFollowing(GetCurrentUser(), id);
 
+            var blocked = _repo.IsBlocked(GetCurrentUser(), id);
 
             if (wallPosts!=null)
             {
@@ -74,7 +75,8 @@ namespace ToerreTumblr.Controllers
                 {
                     Posts = wallPosts,
                     User = _repo.GetUser(id),
-                    isFollowing = following
+                    isFollowing = following,
+                    isBlocked = blocked
                 };
 
                 return View(viewModel);
@@ -87,6 +89,7 @@ namespace ToerreTumblr.Controllers
         public IActionResult GetUsers()
         {
             var users = _repo.GetUsers();
+            ViewData["CurrentUser"] = _repo.GetUser(GetCurrentUser());
             return View(users);
         }
 
@@ -121,6 +124,12 @@ namespace ToerreTumblr.Controllers
             var user = _repo.GetUser(id);
 
             return View(user);
+        }
+
+        public IActionResult UnblockUser(string id)
+        {
+            _repo.UnblockUser(id,GetCurrentUser());
+            return RedirectToAction("ShowWall", new {id = id});
         }
 
         [HttpPost]
