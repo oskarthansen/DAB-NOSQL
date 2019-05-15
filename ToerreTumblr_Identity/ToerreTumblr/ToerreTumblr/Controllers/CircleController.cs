@@ -44,7 +44,8 @@ namespace ToerreTumblr.Controllers
             CircleViewModel vm = new CircleViewModel()
             {
                 Users = _userService.GetUserNames(),
-                UsersLogin = _userService.GetUserLogins()
+                UsersLogin = _userService.GetUserLogins(),
+                Counter = 0
             };
             
 
@@ -142,6 +143,8 @@ namespace ToerreTumblr.Controllers
 
             return RedirectToAction("Circle");
         }
+
+        
 
 
 

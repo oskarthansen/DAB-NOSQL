@@ -11,6 +11,8 @@ namespace ToerreTumblr.ViewModels
     {
         public List<string> Users { get; set; }
         public List<string> UsersLogin { get; set; }
+        public int Counter { get; set; }
+
 
         [Required]
         public string Name { get; set; }

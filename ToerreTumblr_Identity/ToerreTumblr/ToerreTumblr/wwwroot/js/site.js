@@ -60,11 +60,16 @@ function deleteItems() {
     toggleMenu = false;
 }
 
+
+
 var num = 2;
 document.getElementById('add').addEventListener("click", addInput);
 
 function addInput() {
     var demo = document.getElementById('inputElements');
-    demo.insertAdjacentHTML('beforeend', '<input asp-for="Users" class="form-control inputForm" value=""/>');
+    
+    $(demo).append('<input asp-for="Users" class="form-control inputForm" value="" />');
+
     num++;
+    
 }
