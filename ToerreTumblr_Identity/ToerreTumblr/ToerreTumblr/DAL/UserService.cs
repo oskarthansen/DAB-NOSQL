@@ -273,11 +273,16 @@ namespace ToerreTumblr.DAL
             return null;
         }
 
+        public string GetUserNameByLogin(string id)
+        {
+            return _users.Find(u => u.Login == id).FirstOrDefault().Name;
+        }
+
         public string GetUserName(string id)
         {
             return _users.Find(u => u.Id == id).FirstOrDefault().Name;
         }
-
+        
         public bool Login(User user)
         {
             

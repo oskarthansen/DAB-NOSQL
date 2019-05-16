@@ -47,7 +47,7 @@ namespace ToerreTumblr.Controllers
                 UsersLogin = _userService.GetUserLogins(),
                 Counter = 0
             };
-            
+
 
             return View(vm);
         }
@@ -71,17 +71,25 @@ namespace ToerreTumblr.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CircleViewModel vm)
         {
-            string dummy;
-            for (int i = 0; i < vm.Users.Count(); i++)
+            string userId;
+            foreach (var vmUser in vm.Users)
             {
-                if (!_userService.CheckIfUserExist(vm.Users[i]))
+                if (!_userService.CheckIfUserExist(vmUser))
                 {
                     return Unauthorized();
                 }
-
-                dummy = _userService.GetUserId(vm.Users[i]);
-                vm.Users[i] = dummy;
             }
+
+            //for (int i = 0; i < vm.Users.Count(); i++)
+            //{
+            //    if (!_userService.CheckIfUserExist(vm.Users[i]))
+            //    {
+            //        return Unauthorized();
+            //    }
+
+            //    userId = _userService.GetUserId(vm.Users[i]);
+            //    vm.Users[i] = userId;
+            //}
 
             vm.Users.Add(HttpContext.Session.GetString("_CurrentUserId"));
             _circleService.CreateCircle(vm.Users,vm.Name);

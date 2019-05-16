@@ -19,6 +19,7 @@ namespace ToerreTumblr.DAL
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
             var database = client.GetDatabase("SocialNetwork");
             _circles = database.GetCollection<Circle>("Circles");
+            _userService = new UserService(config);
         }
 
         public List<Circle> GetCirclesForUser(string userId)
@@ -85,7 +86,8 @@ namespace ToerreTumblr.DAL
 
             for (int i = 0; i < length; i++)
             {
-                userArray[i] = users[i];
+                string userId = _userService.GetUserId(users[i]);
+                userArray[i] = userId;
             }
 
             Circle circleToInsert = new Circle()

@@ -61,6 +61,11 @@ function deleteItems() {
 }
 
 
+function deleteNode(e) {
+    console.log(e.parentNode.parentNode);
+    e.parentNode.parentNode.removeChild(e.parentNode);
+}
+
 
 var num = 2;
 document.getElementById('add').addEventListener("click", addInput);
@@ -68,7 +73,7 @@ document.getElementById('add').addEventListener("click", addInput);
 function addInput() {
     var demo = document.getElementById('inputElements');
     
-    $(demo).append('<input asp-for="Users" class="form-control inputForm" value="" />');
+    $(demo).append('<div><input asp-for="Users" class="form-control inputForm" value="" /><p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p></div>');
 
     num++;
     

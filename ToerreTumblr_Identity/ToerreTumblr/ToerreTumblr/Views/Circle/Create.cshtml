@@ -30,27 +30,25 @@
                 <span id="add" style="float: right; color: #007bff; cursor: pointer;"><p onclick="AddInputField()">Add new</p></span>
                 
                 <div id="inputElements">
-                    <input asp-for="Users" class="form-control inputForm" value="" />
+                    <div>
+                        <input asp-for="Users" class="form-control inputForm" value="" />
+                        <p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p>
+                    </div>
                 </div>
                 <span asp-validation-for="Users" class="text-danger"></span>
 
 
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" onclick="" />
+                <input type="submit" value="Create" class="btn btn-primary" onclick=""/>
             </div>
 
         </form>
     </div>
-    <div class="col-md-4">
-        <h4>Users Names:</h4>
-        @foreach (var username in Model.Users)
-        {
-            <p>@username</p>
-        }
-    </div>
-    <div class="col-md-4">
+
+    <div style="float: right;" class="col-md-4">
         <h4>User Login</h4>
+        <p>Use the user login to add to circle</p>
         @foreach (var userLogin in Model.UsersLogin)
         {
             <p>@userLogin</p>
