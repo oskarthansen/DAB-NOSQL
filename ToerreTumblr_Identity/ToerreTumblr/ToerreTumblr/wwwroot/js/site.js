@@ -67,7 +67,6 @@ function deleteNode(e) {
 }
 
 
-var num = 2;
 document.getElementById('add').addEventListener("click", addInput);
 
 function addInput() {
@@ -75,13 +74,11 @@ function addInput() {
     var demoChildren = demo.children;
     var id = parseInt(demoChildren[demoChildren.length - 1].children[0].id) + 1;
 
-    var input1 = '<div><input asp-for="Users[' +
+    var input1 = '<div><input name="Users[' +
         id +  
         ']" id="' + id +
-        '" class="form-control inputForm" value="" /><p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p></div>';
+        '" class="form-control inputForm" value type="text" /><p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p></div>';
 
     $(demo).append(input1);
 
-    num++;
-    
 }
