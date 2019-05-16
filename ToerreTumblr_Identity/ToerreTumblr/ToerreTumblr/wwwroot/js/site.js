@@ -72,8 +72,15 @@ document.getElementById('add').addEventListener("click", addInput);
 
 function addInput() {
     var demo = document.getElementById('inputElements');
-    
-    $(demo).append('<div><input asp-for="Users" class="form-control inputForm" value="" /><p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p></div>');
+    var demoChildren = demo.children;
+    var id = parseInt(demoChildren[demoChildren.length - 1].children[0].id) + 1;
+
+    var input1 = '<div><input asp-for="Users[' +
+        id +  
+        ']" id="' + id +
+        '" class="form-control inputForm" value="" /><p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p></div>';
+
+    $(demo).append(input1);
 
     num++;
     

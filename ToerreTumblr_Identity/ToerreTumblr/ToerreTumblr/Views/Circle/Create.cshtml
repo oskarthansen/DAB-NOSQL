@@ -27,11 +27,11 @@
 
 
                 <label class="control-label">Circle members</label>
-                <span id="add" style="float: right; color: #007bff; cursor: pointer;"><p onclick="AddInputField()">Add new</p></span>
+                <span id="add" style="float: right; color: #007bff; cursor: pointer;"><p>Add new</p></span>
                 
                 <div id="inputElements">
                     <div>
-                        <input asp-for="Users" class="form-control inputForm" value="" />
+                        <input id="0" asp-for="@Model.Users[0]" class="form-control inputForm" value="" />
                         <p style="margin-bottom: 15px !important; cursor: pointer; color: #007bff; " onclick="deleteNode(this)">Remove</p>
                     </div>
                 </div>

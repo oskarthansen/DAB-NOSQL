@@ -80,16 +80,6 @@ namespace ToerreTumblr.Controllers
                 }
             }
 
-            //for (int i = 0; i < vm.Users.Count(); i++)
-            //{
-            //    if (!_userService.CheckIfUserExist(vm.Users[i]))
-            //    {
-            //        return Unauthorized();
-            //    }
-
-            //    userId = _userService.GetUserId(vm.Users[i]);
-            //    vm.Users[i] = userId;
-            //}
 
             vm.Users.Add(HttpContext.Session.GetString("_CurrentUserId"));
             _circleService.CreateCircle(vm.Users,vm.Name);

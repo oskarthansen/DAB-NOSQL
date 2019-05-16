@@ -12,6 +12,7 @@ namespace ToerreTumblr.DAL
     public class CircleService
     {
         private readonly IMongoCollection<Circle> _circles;
+        private readonly IMongoCollection<User> _users;
         private readonly UserService _userService;
 
         public CircleService(IConfiguration config)
@@ -19,7 +20,8 @@ namespace ToerreTumblr.DAL
             var client = new MongoClient(config.GetConnectionString("SocialNetwork"));
             var database = client.GetDatabase("SocialNetwork");
             _circles = database.GetCollection<Circle>("Circles");
-            _userService = new UserService(config);
+            _users = database.GetCollection<User>("Users");
+            //_userService = new UserService(config);
         }
 
         public List<Circle> GetCirclesForUser(string userId)
@@ -84,11 +86,14 @@ namespace ToerreTumblr.DAL
             int length = users.Count();
             string[] userArray = new string[length];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length-1; i++)
             {
-                string userId = _userService.GetUserId(users[i]);
-                userArray[i] = userId;
+                string userId = _users.Find(u => u.Login == users[i]).FirstOrDefault()?.Id;
+                if(userId != null)
+                    userArray[i] = userId;
             }
+
+            userArray[length - 1] = users[length - 1];
 
             Circle circleToInsert = new Circle()
             {
